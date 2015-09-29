@@ -10,6 +10,8 @@ namespace skokoban
     {
         static void Main(string[] args)
         {
+
         }
+
     }
 }
