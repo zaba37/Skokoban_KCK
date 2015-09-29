@@ -80,17 +80,45 @@ namespace sokoban
                     @"| |____   >  <  | | | |_ ",
                     @"|______| /_/\_\ |_|  \__|"
             };
-            run();
         }
 
         public void run()
         {
-            Console.WriteLine("\n\n");
             Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.CursorTop = 0;
+            //Console.WriteLine("###############################################################################################################################################################");
+
+            for (int i = 0; i < 159; i++)
+            {
+                Console.Write("▓");
+            }
+
+            Console.Write("\n");
+
+            for (int i = 0; i < 47; i++)
+            {
+                Console.WriteLine("▓                                                                                                                                                             ▓");
+            }
+
+            for (int i = 0; i < 159; i++)
+            {
+                Console.Write("▓");
+            }
+
+            // Console.WriteLine("▓▓#############################################################################################################################################################");
+
+            //  Console.WriteLine("#                                                                                                                                                             #");
+            //  Console.WriteLine("#                                                                                                                                                             #");
+
+            int cursorTopPosition = 2;
+
 
             foreach (string line in title)
             {
-                Console.WriteLine(String.Format("{0," + 110 + "}", line));
+                Console.CursorTop = cursorTopPosition;
+                Console.CursorLeft = Console.WindowWidth / 4;
+                Console.WriteLine(line);
+                cursorTopPosition++; 
             }
 
             printMenuItem(0);
@@ -99,10 +127,9 @@ namespace sokoban
 
             do
             {
-                //while (Console.KeyAvailable == false) Thread.Sleep(250); // Loop until input is entered.
                 checkKey = Console.ReadKey(true);
 
-                if (checkKey.Key == ConsoleKey.W)
+                if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     printMenuItem(currentCursorPosition);
@@ -116,7 +143,7 @@ namespace sokoban
                         currentCursorPosition--;
                     }
                 }
-                else if (checkKey.Key == ConsoleKey.S)
+                else if (checkKey.Key == ConsoleKey.S || checkKey.Key == ConsoleKey.DownArrow)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     printMenuItem(currentCursorPosition);
@@ -129,8 +156,11 @@ namespace sokoban
                     {
                         currentCursorPosition++;
                     }
+                }else if (checkKey.Key == ConsoleKey.Enter)
+                {
+                    selectedAction(currentCursorPosition);
                 }
-            } while (checkKey.Key != ConsoleKey.X);
+            } while (true);
         }
 
         private void printMenuItem(int select)
@@ -141,21 +171,24 @@ namespace sokoban
                     Console.CursorTop = menuItemPrintPositions[0];
                     foreach (string line in menuItemNewGame)
                     {
-                        Console.WriteLine(String.Format("{0," + 104 + "}", line));
+                        Console.CursorLeft = 50;
+                        Console.WriteLine(line);
                     }
                     break;
                 case 1:
                     Console.CursorTop = menuItemPrintPositions[1];
                     foreach (string line in menuItemRanking)
                     {
-                        Console.WriteLine(String.Format("{0," + 98 + "}", line));
+                        Console.CursorLeft = 57;
+                        Console.WriteLine(line);
                     }
                     break;
                 case 2:
                     Console.CursorTop = menuItemPrintPositions[2];
                     foreach (string line in menuItemExit)
                     {
-                        Console.WriteLine(String.Format("{0," + 92 + "}", line));
+                        Console.CursorLeft = 63;
+                        Console.WriteLine(line);
                     }
                     break;
             }
@@ -173,6 +206,22 @@ namespace sokoban
             }
 
             printMenuItem(currentCursorPosition);
+        }
+
+        private void selectedAction(int select)
+        {
+            switch (select)
+            {
+                case 0:
+                    //Start new game
+                    break;
+                case 1:
+                    //Show ranking
+                    break;
+                case 2:
+                    System.Environment.Exit(1);
+                    break;
+            }
         }
     }
 }
