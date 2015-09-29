@@ -4,12 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace skokoban
+namespace sokoban
 {
     class Program
     {
         static void Main(string[] args)
         {
+
+            Console.CursorVisible = false;
+            Console.SetWindowSize(160,50);
+            //Console.SetWindowSize(170, 59);
+            Menu menu = new Menu();
+            Console.ReadKey();
 
         }
 

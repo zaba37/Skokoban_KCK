@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Ogólne informacje o zestawie są kontrolowane poprzez następujący 
 // zbiór atrybutów. Zmień wartości tych atrybutów by zmodyfikować informacje
 // powiązane z zestawem.
-[assembly: AssemblyTitle("skokoban")]
+[assembly: AssemblyTitle("sokoban")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("skokoban")]
+[assembly: AssemblyProduct("sokoban")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
