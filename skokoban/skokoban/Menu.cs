@@ -17,8 +17,7 @@ namespace sokoban
         private int redrawTitleCounter;
         private static System.Timers.Timer timer;
         private ConsoleKeyInfo checkKey;
-
-
+        private Game game = new Game();
 
         public static void timerStop()
         {
@@ -62,7 +61,9 @@ namespace sokoban
 
         public void run()
         {
+
             Constants.printFrame();
+
 
             int cursorTopPosition = 2;
 
@@ -190,7 +191,7 @@ namespace sokoban
             switch (select)
             {
                 case 0:
-                    //Start new game
+                    game.initMap(); //Start new game                   
                     break;
                 case 1:
                     Ranking ranking = new Ranking();
