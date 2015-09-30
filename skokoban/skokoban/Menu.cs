@@ -191,6 +191,7 @@ namespace sokoban
             switch (select)
             {
                 case 0:
+                    timer.Close();
                     game.initMap(); //Start new game                   
                     break;
                 case 1:

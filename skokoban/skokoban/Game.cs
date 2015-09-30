@@ -110,7 +110,7 @@ namespace sokoban
                 }
 
             }
-
+            Console.ReadKey();
         }
     }
 }

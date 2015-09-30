@@ -16,9 +16,7 @@ namespace sokoban
             //Game game = new Game();
             //game.initMap();
             //Console.ReadKey();
-            Menu menu = new Menu();
-            Console.ReadKey();            
-            Console.SetWindowSize(160, 50);        
+            Menu menu = new Menu();        
             menu.run();
 
         }
