@@ -82,7 +82,8 @@ namespace sokoban
                     {
                         currentCursorPosition++;
                     }
-                }else if (checkKey.Key == ConsoleKey.Enter)
+                }
+                else if (checkKey.Key == ConsoleKey.Enter)
                 {
                     selectedAction(currentCursorPosition);
                 }
