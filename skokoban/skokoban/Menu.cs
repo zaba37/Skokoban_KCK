@@ -192,9 +192,7 @@ namespace sokoban
             {
                 case 0:
                     timer.Close();
-
                     game.initMap();                
-
                     break;
                 case 1:
                     Ranking ranking = new Ranking();
