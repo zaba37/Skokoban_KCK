@@ -12,6 +12,9 @@ namespace sokoban
     {
         private int[] menuItemPrintPositions;
         private int currentCursorPosition;
+        private List<String[]> titleList;
+        private int titleCounter;
+        private int redrawTitleCounter;
         private static System.Timers.Timer timer;
         private ConsoleKeyInfo checkKey;
 
@@ -30,11 +33,23 @@ namespace sokoban
         public Menu()
         {
             currentCursorPosition = 0;
+            titleCounter = 0;
+            redrawTitleCounter = 0;
 
             menuItemPrintPositions = new int[3];
             menuItemPrintPositions[0] = 14;
             menuItemPrintPositions[1] = 21;
             menuItemPrintPositions[2] = 29;
+
+            titleList = new List<String[]>();
+            titleList.Add(Constants.title);
+            titleList.Add(Constants.title1);
+            titleList.Add(Constants.title2);
+            titleList.Add(Constants.title3);
+            titleList.Add(Constants.title4);
+            titleList.Add(Constants.title5);
+            titleList.Add(Constants.title6);
+            titleList.Add(Constants.title7);
 
             timer = new System.Timers.Timer();
             timer.Interval = 500;
@@ -51,13 +66,15 @@ namespace sokoban
 
             int cursorTopPosition = 2;
 
-            foreach (string line in Constants.title)
+            foreach (string line in titleList.ElementAt(titleCounter%6))
             {
                 Console.CursorTop = cursorTopPosition;
                 Console.CursorLeft = Console.WindowWidth / 4;
                 Console.WriteLine(line);
                 cursorTopPosition++; 
             }
+
+            titleCounter++;
 
             printMenuItem(0);
             printMenuItem(1);
@@ -136,6 +153,26 @@ namespace sokoban
 
         private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
+            int cursorTopPosition = 2;
+            ConsoleColor consoleColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            if (redrawTitleCounter % 2 == 0)
+            {
+                foreach (string line in titleList.ElementAt(titleCounter % 8))
+                {
+                    Console.CursorTop = cursorTopPosition;
+                    Console.CursorLeft = Console.WindowWidth / 4;
+                    Console.WriteLine(line);
+                    cursorTopPosition++;
+                }
+
+                titleCounter++;
+            }
+
+            redrawTitleCounter++;
+            Console.ForegroundColor = consoleColor;
+
             if (Console.ForegroundColor == ConsoleColor.Yellow)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
