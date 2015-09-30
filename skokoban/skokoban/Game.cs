@@ -28,6 +28,9 @@ namespace sokoban
         public void initMap()
         {
             Console.Clear();
+            Constants.printFrame();
+            Constants.printFrameForCounters();
+
             List<List<int>> ReadNumbers = readFile("sokoban_1.txt");
             Console.CursorLeft = 57;
             Console.CursorTop = 7;
@@ -110,7 +113,7 @@ namespace sokoban
                 }
 
             }
-
+            Console.ReadKey();
         }
     }
 }

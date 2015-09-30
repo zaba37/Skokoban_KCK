@@ -198,5 +198,22 @@ namespace sokoban
             Console.CursorLeft = 59;
             Console.WriteLine("╚════════════════╩════════════════╝");
         }
+
+        public static void printFrameForCounters()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.CursorTop = 2;
+            Console.CursorLeft = 4;
+            Console.WriteLine("╔═════════════════════════════════╗");
+
+            for (int i = 0; i < 42; i++)
+            {
+                Console.CursorLeft = 4;
+                Console.WriteLine("║                                 ║");
+            }
+
+            Console.CursorLeft = 4;
+            Console.WriteLine("╚═════════════════════════════════╝");
+        }
     }
 }

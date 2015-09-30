@@ -191,7 +191,8 @@ namespace sokoban
             switch (select)
             {
                 case 0:
-                    game.initMap(); //Start new game                   
+                    timer.Close();
+                    game.initMap();                
                     break;
                 case 1:
                     Ranking ranking = new Ranking();
