@@ -10,10 +10,6 @@ namespace sokoban
 {
     class Menu
     {
-        private String[] title;
-        private String[] menuItemNewGame;
-        private String[] menuItemRanking;
-        private String[] menuItemExit;
         private int[] menuItemPrintPositions;
         private int currentCursorPosition;
         private static System.Timers.Timer timer;
@@ -47,85 +43,15 @@ namespace sokoban
             timer.Enabled = true;
 
             checkKey = new ConsoleKeyInfo();
-
-            title = new String[]
-            {
-                   @"  ______    ______   __    __   ______   _______    ______   __    __ ",
-                   @" /      \  /      \ |  \  /  \ /      \ |       \  /      \ |  \  |  \",
-                   @"|  $$$$$$\|  $$$$$$\| $$ /  $$|  $$$$$$\| $$$$$$$\|  $$$$$$\| $$\ | $$",
-                   @"| $$___\$$| $$  | $$| $$/  $$ | $$  | $$| $$__/ $$| $$__| $$| $$$\| $$",
-                   @" \$$    \ | $$  | $$| $$  $$  | $$  | $$| $$    $$| $$    $$| $$$$\ $$",
-                   @" _\$$$$$$\| $$  | $$| $$$$$\  | $$  | $$| $$$$$$$\| $$$$$$$$| $$\$$ $$",
-                   @"|  \__| $$| $$__/ $$| $$ \$$\ | $$__/ $$| $$__/ $$| $$  | $$| $$ \$$$$",
-                   @" \$$    $$ \$$    $$| $$  \$$\ \$$    $$| $$    $$| $$  | $$| $$  \$$$",
-                   @"  \$$$$$$   \$$$$$$  \$$   \$$  \$$$$$$  \$$$$$$$  \$$   \$$ \$$   \$$"
-            };
-
-            menuItemNewGame = new String[]
-            {
-                     @" _   _                  _____                      ",
-                     @"| \ | |                / ____|                     ",
-                     @"|  \| | _____      __ | |  __  __ _ _ __ ___   ___ ",
-                     @"| . ` |/ _ \ \ /\ / / | | |_ |/ _` | '_ ` _ \ / _ \",
-                     @"| |\  |  __/\ V  V /  | |__| | (_| | | | | | |  __/",
-                     @"|_| \_|\___| \_/\_/    \_____|\__,_|_| |_| |_|\___|"
-            };
-
-            menuItemRanking = new String[]
-            {
-                    @" _____             _    _             ",
-                    @"|  __ \           | |  (_)            ",
-                    @"| |__) |__ _ _ __ | | ___ _ __   __ _ ",
-                    @"|  _  // _` | '_ \| |/ / | '_ \ / _` |",
-                    @"| | \ \ (_| | | | |   <| | | | | (_| |",
-                    @"|_|  \_\__,_|_| |_|_|\_\_|_| |_|\__, |",
-                    @"                                 __/ |",
-                    @"                                |___/ "
-            };
-
-            menuItemExit = new String[]
-            {
-                    @" ______          _   _   ",
-                    @"|  ____|        (_) | |  ",
-                    @"| |__    __  __  _  | |_ ",
-                    @"|  __|   \ \/ / | | | __|",
-                    @"| |____   >  <  | | | |_ ",
-                    @"|______| /_/\_\ |_|  \__|"
-            };
         }
 
         public void run()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.CursorTop = 0;
-            //Console.WriteLine("###############################################################################################################################################################");
-
-            for (int i = 0; i < 159; i++)
-            {
-                Console.Write("▓");
-            }
-
-            Console.Write("\n");
-
-            for (int i = 0; i < 47; i++)
-            {
-                Console.WriteLine("▓                                                                                                                                                             ▓");
-            }
-
-            for (int i = 0; i < 159; i++)
-            {
-                Console.Write("▓");
-            }
-
-            // Console.WriteLine("▓▓#############################################################################################################################################################");
-
-            //  Console.WriteLine("#                                                                                                                                                             #");
-            //  Console.WriteLine("#                                                                                                                                                             #");
+            Constants.printFrame();
 
             int cursorTopPosition = 2;
 
-
-            foreach (string line in title)
+            foreach (string line in Constants.title)
             {
                 Console.CursorTop = cursorTopPosition;
                 Console.CursorLeft = Console.WindowWidth / 4;
@@ -181,7 +107,7 @@ namespace sokoban
             {
                 case 0:
                     Console.CursorTop = menuItemPrintPositions[0];
-                    foreach (string line in menuItemNewGame)
+                    foreach (string line in Constants.menuItemNewGame)
                     {
                         Console.CursorLeft = 50;
                         Console.WriteLine(line);
@@ -189,7 +115,7 @@ namespace sokoban
                     break;
                 case 1:
                     Console.CursorTop = menuItemPrintPositions[1];
-                    foreach (string line in menuItemRanking)
+                    foreach (string line in Constants.menuItemRanking)
                     {
                         Console.CursorLeft = 57;
                         Console.WriteLine(line);
@@ -197,7 +123,7 @@ namespace sokoban
                     break;
                 case 2:
                     Console.CursorTop = menuItemPrintPositions[2];
-                    foreach (string line in menuItemExit)
+                    foreach (string line in Constants.menuItemExit)
                     {
                         Console.CursorLeft = 63;
                         Console.WriteLine(line);
