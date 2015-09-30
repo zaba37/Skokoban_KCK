@@ -16,9 +16,10 @@ namespace sokoban
             //Game game = new Game();
             //game.initMap();
             //Console.ReadKey();
-            Menu menu = new Menu();        
-            menu.run();
 
+            Menu menu = new Menu();
+
+            menu.run();
         }
 
     }
