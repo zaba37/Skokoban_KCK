@@ -10,12 +10,16 @@ namespace sokoban
     {
         static void Main(string[] args)
         {
-
             Console.CursorVisible = false;
             Console.SetWindowSize(160,50);
             //Console.SetWindowSize(170, 59);
-            Menu menu = new Menu();
+            Game game = new Game();
+            game.initMap();
             Console.ReadKey();
+            Menu menu = new Menu();
+            Console.ReadKey();            
+            Console.SetWindowSize(160, 50);        
+            menu.run();
 
         }
 
