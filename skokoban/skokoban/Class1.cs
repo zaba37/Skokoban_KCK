@@ -183,46 +183,20 @@ namespace sokoban
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.CursorTop = 22;
             Console.CursorLeft = 59;
-            for (int i = 0; i < 35; i++)
-            {
-                if (i == 0)
-                {
-                    Console.Write("╔");
-                }
-                else if (i == 34)
-                {
-                    Console.Write("╗");
-                }
-                else
-                {
-                    Console.Write("═");
-                }
-            }
-
-            Console.Write("\n");
+            Console.WriteLine("╔════════════════╦════════════════╗");
+            Console.CursorLeft = 59;
+            Console.WriteLine("║      NAME      ║      SCORE     ║");
+            Console.CursorLeft = 59;
+            Console.WriteLine("╠════════════════╬════════════════╣");
 
             for (int i = 0; i < 20; i++)
             {
                 Console.CursorLeft = 59;
-                Console.WriteLine("║                                 ║");
+                Console.WriteLine("║                ║                ║");
             }
 
             Console.CursorLeft = 59;
-            for (int i = 0; i < 35; i++)
-            {
-                if (i == 0)
-                {
-                    Console.Write("╚");
-                }
-                else if (i == 34)
-                {
-                    Console.Write("╝");
-                }
-                else
-                {
-                    Console.Write("═");
-                }
-            }
+            Console.WriteLine("╚════════════════╩════════════════╝");
         }
     }
 }
