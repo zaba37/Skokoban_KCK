@@ -15,6 +15,18 @@ namespace sokoban
         private static System.Timers.Timer timer;
         private ConsoleKeyInfo checkKey;
 
+
+
+        public static void timerStop()
+        {
+            timer.Enabled = false;
+        }
+
+        public static void timerStart()
+        {
+            timer.Enabled = true;
+        }
+
         public Menu()
         {
             currentCursorPosition = 0;
@@ -143,7 +155,8 @@ namespace sokoban
                     //Start new game
                     break;
                 case 1:
-                    //Show ranking
+                    Ranking ranking = new Ranking();
+                    ranking.printRanking();
                     break;
                 case 2:
                     System.Environment.Exit(1);
