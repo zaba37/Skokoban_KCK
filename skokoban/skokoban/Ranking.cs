@@ -11,26 +11,32 @@ namespace sokoban
         public void printRanking()
         {
             Menu.timerStop();
+            Console.CursorVisible = false;
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.CursorTop = 0;
 
-            for (int i = 0; i < 159; i++)
+            Constants.printFrame();
+
+            int cursorTopPosition = 2;
+
+            foreach (string line in Constants.title)
             {
-                Console.Write("▓");
+                Console.CursorTop = cursorTopPosition;
+                Console.CursorLeft = Console.WindowWidth / 4;
+                Console.WriteLine(line);
+                cursorTopPosition++;
             }
 
-            Console.Write("\n");
+            Console.CursorTop = Console.CursorTop + 1;
 
-            for (int i = 0; i < 47; i++)
+            foreach (string line in Constants.menuItemRanking)
             {
-                Console.WriteLine("▓                                                                                                                                                             ▓");
+                Console.CursorLeft = 57;
+                Console.WriteLine(line);
             }
-
-            for (int i = 0; i < 159; i++)
-            {
-                Console.Write("▓");
-            }
+            
+            Constants.printRankingFrame();
 
             readText();
         }
@@ -39,18 +45,27 @@ namespace sokoban
         {
             Console.SetCursorPosition(10,10);
             string line;
-            System.IO.StreamReader file =
-                new System.IO.StreamReader(@"text.txt");
+            String fileName = @"ranking.txt";
+            System.IO.StreamReader file;
+
+            if(System.IO.File.Exists(fileName))
+            {
+                file = new System.IO.StreamReader(fileName);
+            }
+            else
+            {
+                System.IO.File.Create(fileName).Close();
+                file = new System.IO.StreamReader(fileName);
+            }
+
             while ((line = file.ReadLine()) != null)
             {
                 System.Console.WriteLine(line);
                 Console.CursorLeft = 10;
             }
+
             file.Close();
             System.Console.ReadLine();
         }
-        
-
-
     }
 }

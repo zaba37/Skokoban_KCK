@@ -53,7 +53,8 @@ namespace sokoban
                     @"|______| /_/\_\ |_|  \__|"
             };
 
-        public static void printFrame(){
+        public static void printFrame()
+        {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.CursorTop = 0;
 
@@ -72,6 +73,53 @@ namespace sokoban
             for (int i = 0; i < 159; i++)
             {
                 Console.Write("▓");
+            }
+        }
+
+        public static void printRankingFrame()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.CursorTop = 22;
+            Console.CursorLeft = 59;
+            for (int i = 0; i < 35; i++)
+            {
+                if (i == 0)
+                {
+                    Console.Write("╔");
+                }
+                else if (i == 34)
+                {
+                    Console.Write("╗");
+                }
+                else
+                {
+                    Console.Write("═");
+                }
+            }
+
+            Console.Write("\n");
+
+            for (int i = 0; i < 20; i++)
+            {
+                Console.CursorLeft = 59;
+                Console.WriteLine("║                                 ║");
+            }
+
+            Console.CursorLeft = 59;
+            for (int i = 0; i < 35; i++)
+            {
+                if (i == 0)
+                {
+                    Console.Write("╚");
+                }
+                else if (i == 34)
+                {
+                    Console.Write("╝");
+                }
+                else
+                {
+                    Console.Write("═");
+                }
             }
         }
     }
