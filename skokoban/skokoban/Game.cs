@@ -87,7 +87,11 @@ namespace sokoban
             play(ReadNumbers);
         }
 
-
+        //POSTAC: 5
+        //PUDELKO:6
+        //PODLOGA:3
+        //SCIANA:2
+        //PUNKT:4
 
 
         public void drawMap(List<List<int>> CurrentMap, List<List<int>> previousState)
@@ -180,6 +184,23 @@ namespace sokoban
         }
 
 
+        void refreshLists(List<List<int>> map, List<List<int>> previousState, int up, int down, int left, int right)
+        {
+            if (up!=0)
+            {
+                int[] heroPosition = findHeroPosition(map);
+                if (map[heroPosition[0] -1][heroPosition[1]] == 2)
+                    return;
+                if (map[heroPosition[0] -1][heroPosition[1]] == 3)
+                {
+                    previousState = copyMap(map);
+                    map[heroPosition[0]][heroPosition[1]] = 3;
+                    map[heroPosition[0]-1][heroPosition[1]] = 5;
+
+                }
+            }
+        }
+
         void play(List<List<int>> map)
         {
             var checkKey = new ConsoleKeyInfo();
@@ -189,10 +210,12 @@ namespace sokoban
             do
             {
                 checkKey = Console.ReadKey(true);
-
+                int[] tab= new int[5];
+                
                 if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
                 {
-                    
+                    refreshLists(Map, previousStateMap, 1, 0, 0, 0);
+                    drawMap(Map, previousStateMap);
                 }
                 if (checkKey.Key == ConsoleKey.S || checkKey.Key == ConsoleKey.DownArrow)
                 {
@@ -205,11 +228,13 @@ namespace sokoban
                 if (checkKey.Key == ConsoleKey.D || checkKey.Key == ConsoleKey.RightArrow)
                 {
                     //tutaj jakies glupoty do testu sa dodane tylko
-                    Map[heroPosition[0]][heroPosition[1]] = 3;
-                    heroPosition[1]++;
-                    Map[heroPosition[0]][heroPosition[1]] = 5;
-                    drawMap(Map, previousStateMap);
-                    previousStateMap = copyMap(Map);
+                   // Map[heroPosition[0]][heroPosition[1]] = 3;
+                  //  heroPosition[1]++;
+                  //  Map[heroPosition[0]][heroPosition[1]] = 5;
+                  //  drawMap(Map, previousStateMap);
+                   // previousStateMap = copyMap(Map);
+
+                    
                 }
             } while (true);
         }
