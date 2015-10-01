@@ -145,7 +145,7 @@ namespace sokoban
                     @"|______| /_/\_\ |_|  \__|"
             };
 
-        public static String[] menuItemBack = new String[]
+        public static String[] backButton = new String[]
         {
                     @"  ____             _    ",
                     @" |  _ \           | |   ",
@@ -153,6 +153,18 @@ namespace sokoban
                     @" |  _ < / _` |/ __| |/ /",
                     @" | |_) | (_| | (__|   < ",
                     @" |____/ \__,_|\___|_|\_\"
+        };
+
+        public static String[] arrowUp = new String[]
+        {
+                    @" /\ ",
+                    @"|/\|"
+        };
+
+        public static String[] arrowDown = new String[]
+        {
+                    @"|\/|",
+                    @" \/ "
         };
 
         public static void printFrame()
@@ -214,6 +226,39 @@ namespace sokoban
 
             Console.CursorLeft = 4;
             Console.WriteLine("╚═════════════════════════════════╝");
+        }
+
+        public static void printBackButton()
+        {
+            Console.CursorTop = 40;
+           
+            foreach (string line in backButton)
+            {
+                Console.CursorLeft = 4;
+                Console.WriteLine(line);
+            }
+        }
+
+        public static void printArrowUp()
+        {
+            Console.CursorTop = 40;
+
+            foreach (string line in arrowUp)
+            {
+                Console.CursorLeft = 95;
+                Console.WriteLine(line);
+            }
+        }
+
+        public static void printArrowDown()
+        {
+            Console.CursorTop = 43;
+
+            foreach (string line in arrowDown)
+            {
+                Console.CursorLeft = 95;
+                Console.WriteLine(line);
+            }
         }
     }
 }
