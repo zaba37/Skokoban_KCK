@@ -15,22 +15,16 @@ namespace sokoban
         private List<String[]> titleList;
         private int titleCounter;
         private int redrawTitleCounter;
-        private static System.Timers.Timer timer;
+        private System.Timers.Timer timer;
         private ConsoleKeyInfo checkKey;
-        private Game game = new Game();
-
-        public static void timerStop()
-        {
-            timer.Enabled = false;
-        }
-
-        public static void timerStart()
-        {
-            timer.Enabled = true;
-        }
+        private Game game;
+        private Ranking ranking;
 
         public Menu()
         {
+            ranking = new Ranking();
+            game = new Game();
+            Console.Clear();
             currentCursorPosition = 0;
             titleCounter = 0;
             redrawTitleCounter = 0;
@@ -54,16 +48,15 @@ namespace sokoban
             timer.Interval = 500;
             timer.Elapsed += OnTimedEvent;
             timer.AutoReset = true;
-            timer.Enabled = true;
-
+            
             checkKey = new ConsoleKeyInfo();
         }
 
         public void run()
         {
+            timer.Enabled = true;
 
             Constants.printFrame();
-
 
             int cursorTopPosition = 2;
 
@@ -81,7 +74,7 @@ namespace sokoban
             printMenuItem(1);
             printMenuItem(2);
 
-            do
+            while(true)
             {
                 checkKey = Console.ReadKey(true);
 
@@ -118,7 +111,7 @@ namespace sokoban
                     selectedAction(currentCursorPosition);
                     break;
                 }
-            } while (true);
+            }
         }
 
         private void printMenuItem(int select)
@@ -195,8 +188,8 @@ namespace sokoban
                     game.initMap();                
                     break;
                 case 1:
-                    Ranking ranking = new Ranking();
-                    ranking.printRanking();
+                    timer.Close();
+                    ranking.run();
                     break;
                 case 2:
                     System.Environment.Exit(1);

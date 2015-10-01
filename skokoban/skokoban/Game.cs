@@ -47,9 +47,9 @@ namespace sokoban
             }
                 hero = new String[]
             {
-                    @"!!!",
-                    @"!!!",
-                    @"!!!"
+                    @" ☺ ",
+                    @"┤█├",
+                    @"┘ └"
             };
 
             box = new String[]
