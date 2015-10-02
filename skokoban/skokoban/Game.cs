@@ -47,6 +47,7 @@ namespace sokoban
             initMap(mapPath,true);
 
         }
+
         private List<List<int>> readFile(string path)
         {
             List<List<int>> intMap = null; ;
@@ -106,11 +107,11 @@ namespace sokoban
 
             drawMap(ReadNumbers, map);
 
-            Timer t = new Timer(100);
+            Timer t = new Timer(5000);
             t.AutoReset = true;
             t.Elapsed += (s, e) => UpdateTime(e);
             startTime = DateTime.Now;
-            //t.Start();
+            t.Start();
             if(firstStart==true)
                 play(ReadNumbers);
         }
