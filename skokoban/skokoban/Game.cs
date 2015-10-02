@@ -16,7 +16,7 @@ namespace sokoban
         private String[] floor;
         private List<List<int>> map = new List<List<int>>();
 
-        
+
         private List<List<int>> readFile(string path)
         {
             var lines = File.ReadAllLines(path);
@@ -36,16 +36,16 @@ namespace sokoban
             Console.CursorLeft = 57;
             Console.CursorTop = 7;
 
-            for (int i = 0; i<ReadNumbers.Count();i++)
+            for (int i = 0; i < ReadNumbers.Count(); i++)
             {
                 List<int> initList = new List<int>();
-                for (int j = 0;j<ReadNumbers[i].Count(); j++)
-                {                   
+                for (int j = 0; j < ReadNumbers[i].Count(); j++)
+                {
                     initList.Add(-1);
                 }
-                map.Add(initList);              
+                map.Add(initList);
             }
-                hero = new String[]
+            hero = new String[]
             {
                     @" ☺ ",
                     @"┤█├",
@@ -83,7 +83,7 @@ namespace sokoban
                     @"   "
                  
             };
-            drawMap(ReadNumbers,map);
+            drawMap(ReadNumbers, map);
             play(ReadNumbers);
         }
 
@@ -106,7 +106,7 @@ namespace sokoban
                     for (int j = 0; j < CurrentMap[i].Count; j++)
                     {
                         if (CurrentMap[i][j] == 5)
-                        {                          
+                        {
                             Console.ForegroundColor = ConsoleColor.Blue;
                             Console.Write(hero[k]);
                             writed = true;
@@ -168,73 +168,244 @@ namespace sokoban
             return position;
         }
 
-        List<List<int>> copyMap( List<List<int>> map1)
+        List<List<int>> copyMap(List<List<int>> map1)
         {
             List<List<int>> mapToReturn = new List<List<int>>();
-             for(int i=0;i<map1.Count();i++)
-             {
-                 List<int> initList = new List<int>();
-                 for(int j=0;j<map1[i].Count();j++)
-                 {
-                     initList.Add(map1[i][j]);
-                 }
-                 mapToReturn.Add(initList);
-             }
-             return mapToReturn;
+            for (int i = 0; i < map1.Count(); i++)
+            {
+                List<int> initList = new List<int>();
+                for (int j = 0; j < map1[i].Count(); j++)
+                {
+                    initList.Add(map1[i][j]);
+                }
+                mapToReturn.Add(initList);
+            }
+            return mapToReturn;
         }
 
 
-        void refreshLists(List<List<int>> map, List<List<int>> previousState, int up, int down, int left, int right)
+        List<List<List<int>>> refreshLists(List<List<int>> map, List<List<int>> previousState, int up, int down, int left, int right)
         {
-            if (up!=0)
+            List<List<List<int>>> toReturn = new List<List<List<int>>>();
+
+            if (up != 0)
             {
                 int[] heroPosition = findHeroPosition(map);
-                if (map[heroPosition[0] -1][heroPosition[1]] == 2)
-                    return;
-                if (map[heroPosition[0] -1][heroPosition[1]] == 3)
+                if (map[heroPosition[0] - 1][heroPosition[1]] == 2) //gdy na gorze bedzie sciana
+                {
+                    toReturn.Add(map);
+                    toReturn.Add(previousState);
+                }
+                if (map[heroPosition[0] - 1][heroPosition[1]] == 3) //gdy na gorze bedzie podloga
                 {
                     previousState = copyMap(map);
                     map[heroPosition[0]][heroPosition[1]] = 3;
-                    map[heroPosition[0]-1][heroPosition[1]] = 5;
+                    map[heroPosition[0] - 1][heroPosition[1]] = 5;
+                    toReturn.Add(map);
+                    toReturn.Add(previousState);
+                }
+                if (map[heroPosition[0] - 1][heroPosition[1]] == 6) //gdy na gorze bedzie skrzynka
+                {
+                    if (map[heroPosition[0] - 2][heroPosition[1]] == 3 || map[heroPosition[0] - 2][heroPosition[1]] == 4) //sprawdz czy mozna przesunac skrzynke(podloga lub punkt)
+                    {
+                        previousState = copyMap(map);
+                        map[heroPosition[0]][heroPosition[1]] = 3;
+                        map[heroPosition[0] - 1][heroPosition[1]] = 5;
+                        map[heroPosition[0] - 2][heroPosition[1]] = 6;
+                        toReturn.Add(map);
+                        toReturn.Add(previousState);
+                    }
+                    else
+                    {
+                        toReturn.Add(map);
+                        toReturn.Add(previousState);
+                    }
+                }
 
+                if (map[heroPosition[0] - 1][heroPosition[1]] == 4) //gdy na gorze bedzie punkt
+                {
+                    previousState = copyMap(map);
+                    map[heroPosition[0]][heroPosition[1]] = 3;
+                    map[heroPosition[0] - 1][heroPosition[1]] = 5;
+                    toReturn.Add(map);
+                    toReturn.Add(previousState);
                 }
             }
+
+
+
+
+            if (down != 0)
+            {
+                int[] heroPosition = findHeroPosition(map);
+                if (map[heroPosition[0] + 1][heroPosition[1]] == 2) //gdy na dole bedzie sciana
+                {
+                    toReturn.Add(map);
+                    toReturn.Add(previousState);
+                }
+                if (map[heroPosition[0] + 1][heroPosition[1]] == 3) //gdy na dole bedzie podloga
+                {
+                    previousState = copyMap(map);
+                    map[heroPosition[0]][heroPosition[1]] = 3;
+                    map[heroPosition[0] + 1][heroPosition[1]] = 5;
+                    toReturn.Add(map);
+                    toReturn.Add(previousState);
+                }
+                if (map[heroPosition[0] + 1][heroPosition[1]] == 6) //gdy na dole bedzie skrzynka
+                {
+                    if (map[heroPosition[0] + 2][heroPosition[1]] == 3 || map[heroPosition[0] + 2][heroPosition[1]] == 4) //sprawdz czy mozna przesunac skrzynke(podloga lub punkt)
+                    {
+                        previousState = copyMap(map);
+                        map[heroPosition[0]][heroPosition[1]] = 3;
+                        map[heroPosition[0] + 1][heroPosition[1]] = 5;
+                        map[heroPosition[0] + 2][heroPosition[1]] = 6;
+                        toReturn.Add(map);
+                        toReturn.Add(previousState);
+                    }
+                    else
+                    {
+                        toReturn.Add(map);
+                        toReturn.Add(previousState);
+                    }
+                }
+
+                if (map[heroPosition[0] + 1][heroPosition[1]] == 4) //gdy na dole bedzie punkt
+                {
+                    previousState = copyMap(map);
+                    map[heroPosition[0]][heroPosition[1]] = 3;
+                    map[heroPosition[0] + 1][heroPosition[1]] = 5;
+                    toReturn.Add(map);
+                    toReturn.Add(previousState);
+                }
+            }
+
+
+
+            if (right != 0)
+            {
+                int[] heroPosition = findHeroPosition(map);
+                if (map[heroPosition[0]][heroPosition[1] + 1] == 2) //gdy na prawo bedzie sciana
+                {
+                    toReturn.Add(map);
+                    toReturn.Add(previousState);
+                }
+                if (map[heroPosition[0]][heroPosition[1] + 1] == 3) //gdy na prawo bedzie podloga
+                {
+                    previousState = copyMap(map);
+                    map[heroPosition[0]][heroPosition[1]] = 3;
+                    map[heroPosition[0]][heroPosition[1] + 1] = 5;
+                    toReturn.Add(map);
+                    toReturn.Add(previousState);
+                }
+                if (map[heroPosition[0]][heroPosition[1] + 1] == 6) //gdy na prawo bedzie skrzynka
+                {
+                    if (map[heroPosition[0]][heroPosition[1] + 2] == 3 || map[heroPosition[0]][heroPosition[1] + 2] == 4) //sprawdz czy mozna przesunac skrzynke(podloga lub punkt)
+                    {
+                        previousState = copyMap(map);
+                        map[heroPosition[0]][heroPosition[1]] = 3;
+                        map[heroPosition[0]][heroPosition[1] + 1] = 5;
+                        map[heroPosition[0]][heroPosition[1] + 2] = 6;
+                        toReturn.Add(map);
+                        toReturn.Add(previousState);
+                    }
+                    else
+                    {
+                        toReturn.Add(map);
+                        toReturn.Add(previousState);
+                    }
+                }
+
+                if (map[heroPosition[0]][heroPosition[1] + 1] == 4) //gdy na prawo bedzie punkt
+                {
+                    previousState = copyMap(map);
+                    map[heroPosition[0]][heroPosition[1]] = 3;
+                    map[heroPosition[0]][heroPosition[1] + 1] = 5;
+                    toReturn.Add(map);
+                    toReturn.Add(previousState);
+                }
+            }
+
+
+
+            if (left != 0)
+            {
+                int[] heroPosition = findHeroPosition(map);
+                if (map[heroPosition[0]][heroPosition[1] - 1] == 2) //gdy na lewo bedzie sciana
+                {
+                    toReturn.Add(map);
+                    toReturn.Add(previousState);
+                }
+                if (map[heroPosition[0]][heroPosition[1] - 1] == 3) //gdy na lewo bedzie podloga
+                {
+                    previousState = copyMap(map);
+                    map[heroPosition[0]][heroPosition[1]] = 3;
+                    map[heroPosition[0]][heroPosition[1] - 1] = 5;
+                    toReturn.Add(map);
+                    toReturn.Add(previousState);
+                }
+                if (map[heroPosition[0]][heroPosition[1] - 1] == 6) //gdy na lewo bedzie skrzynka
+                {
+                    if (map[heroPosition[0]][heroPosition[1] - 2] == 3 || map[heroPosition[0]][heroPosition[1] - 2] == 4) //sprawdz czy mozna przesunac skrzynke(podloga lub punkt)
+                    {
+                        previousState = copyMap(map);
+                        map[heroPosition[0]][heroPosition[1]] = 3;
+                        map[heroPosition[0]][heroPosition[1] - 1] = 5;
+                        map[heroPosition[0]][heroPosition[1] - 2] = 6;
+                        toReturn.Add(map);
+                        toReturn.Add(previousState);
+                    }
+                    else
+                    {
+                        toReturn.Add(map);
+                        toReturn.Add(previousState);
+                    }
+                }
+
+                if (map[heroPosition[0]][heroPosition[1] - 1] == 4) //gdy na lewo bedzie punkt
+                {
+                    previousState = copyMap(map);
+                    map[heroPosition[0]][heroPosition[1]] = 3;
+                    map[heroPosition[0]][heroPosition[1] - 1] = 5;
+                    toReturn.Add(map);
+                    toReturn.Add(previousState);
+                }
+            }
+
+
+            return toReturn;
         }
 
         void play(List<List<int>> map)
         {
             var checkKey = new ConsoleKeyInfo();
-            List<List<int>> Map= map;
+            List<List<int>> Map = map;
             List<List<int>> previousStateMap = copyMap(Map);
+            List<List<List<int>>> helpList;
             int[] heroPosition = findHeroPosition(Map);
             do
             {
                 checkKey = Console.ReadKey(true);
-                int[] tab= new int[5];
-                
+                int[] tab = new int[5];
+
                 if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
                 {
-                    refreshLists(Map, previousStateMap, 1, 0, 0, 0);
-                    drawMap(Map, previousStateMap);
+                    helpList = refreshLists(Map, previousStateMap, 1, 0, 0, 0);
+                    drawMap(helpList[0], helpList[1]);
                 }
                 if (checkKey.Key == ConsoleKey.S || checkKey.Key == ConsoleKey.DownArrow)
                 {
-
+                    helpList = refreshLists(Map, previousStateMap, 0, 1, 0, 0);
+                    drawMap(helpList[0], helpList[1]);
                 }
                 if (checkKey.Key == ConsoleKey.A || checkKey.Key == ConsoleKey.LeftArrow)
                 {
-
+                    helpList = refreshLists(Map, previousStateMap, 0, 0, 1, 0);
+                    drawMap(helpList[0], helpList[1]);
                 }
                 if (checkKey.Key == ConsoleKey.D || checkKey.Key == ConsoleKey.RightArrow)
                 {
-                    //tutaj jakies glupoty do testu sa dodane tylko
-                   // Map[heroPosition[0]][heroPosition[1]] = 3;
-                  //  heroPosition[1]++;
-                  //  Map[heroPosition[0]][heroPosition[1]] = 5;
-                  //  drawMap(Map, previousStateMap);
-                   // previousStateMap = copyMap(Map);
-
-                    
+                    helpList = refreshLists(Map, previousStateMap, 0, 0, 0, 1);
+                    drawMap(helpList[0], helpList[1]);
                 }
             } while (true);
         }
