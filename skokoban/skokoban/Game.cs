@@ -23,7 +23,7 @@ namespace sokoban
         private int NumberMovedBoxes;
         private int previousNumberMovedBoxes;
         private int mapNumber;
-
+        private object writelock;
         DateTime startTime;
 
         public Game(string mapPath)
@@ -44,7 +44,8 @@ namespace sokoban
             wall = wallObject.graphics;
 
             mapNumber = 1;
-            initMap(mapPath,true);
+            writelock = new object();
+            initMap(mapPath, true);
 
         }
         private List<List<int>> readFile(string path)
@@ -78,51 +79,61 @@ namespace sokoban
         }
 
 
-        private void initMap(string pathFileMap,bool firstStart)
+        private void initMap(string pathFileMap, bool firstStart)
         {
+
             Console.Clear();
             numberSteps = 0;
             PreviousNumberSteps = 0;
             NumberMovedBoxes = 0;
             previousNumberMovedBoxes = 0;
-            Constants.printFrame();
-            Constants.printFrameForCounters();
-            printInformation();
+
+
             List<List<int>> map = new List<List<int>>();
-            List<List<int>> ReadNumbers = readFile(pathFileMap);        
+            List<List<int>> ReadNumbers = readFile(pathFileMap);
             pointsList = new List<PointPosition>();
-            Console.CursorLeft = 57;
-            Console.CursorTop = 7;
-
-            for (int i = 0; i < ReadNumbers.Count(); i++)
+            lock (writelock)
             {
-                List<int> initList = new List<int>();
-                for (int j = 0; j < ReadNumbers[i].Count(); j++)
+                Constants.printFrame();
+                Constants.printFrameForCounters();
+                printInformation();
+                Console.CursorLeft = 57;
+                Console.CursorTop = 7;
+
+                for (int i = 0; i < ReadNumbers.Count(); i++)
                 {
-                    initList.Add(-1);
+                    List<int> initList = new List<int>();
+                    for (int j = 0; j < ReadNumbers[i].Count(); j++)
+                    {
+                        initList.Add(-1);
+                    }
+                    map.Add(initList);
                 }
-                map.Add(initList);
+
+                drawMap(ReadNumbers, map);
+
+                Timer t = new Timer(100);
+                t.AutoReset = true;
+                t.Elapsed += (s, e) => UpdateTime(e);
+                startTime = DateTime.Now;
+                t.Start();
             }
-
-            drawMap(ReadNumbers, map);
-
-            Timer t = new Timer(100);
-            t.AutoReset = true;
-            t.Elapsed += (s, e) => UpdateTime(e);
-            startTime = DateTime.Now;
-            //t.Start();
-            if(firstStart==true)
+            if (firstStart == true)
                 play(ReadNumbers);
         }
 
         private void UpdateTime(ElapsedEventArgs e)
         {
-            var elapsedTime = (DateTime.Now - startTime).ToString(@"hh\:mm\:ss");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.CursorTop = 8;
-            Console.CursorLeft = 13;
+            lock (writelock)
+            {
+                var elapsedTime = (DateTime.Now - startTime).ToString(@"hh\:mm\:ss");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.CursorTop = 8;
+                Console.CursorLeft = 13;
 
-            Console.Write(elapsedTime);
+                Console.Write(elapsedTime);
+            }
+
         }
 
 
@@ -137,56 +148,59 @@ namespace sokoban
 
         private void drawMap(List<List<int>> CurrentMap, List<List<int>> previousState)
         {
-            bool writed = false;
-            Console.CursorLeft = 57;
-            Console.CursorTop = 7;
-            for (int i = 0; i < CurrentMap.Count; i++)
+            lock (writelock)
             {
-                for (int k = 0; k < hero.Count(); k++)
+                bool writed = false;
+                Console.CursorLeft = 57;
+                Console.CursorTop = 7;
+                for (int i = 0; i < CurrentMap.Count; i++)
                 {
-                    for (int j = 0; j < CurrentMap[i].Count; j++)
+                    for (int k = 0; k < hero.Count(); k++)
                     {
-                        if (CurrentMap[i][j] == 5)
+                        for (int j = 0; j < CurrentMap[i].Count; j++)
                         {
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.Write(hero[k]);
-                            writed = true;
-                        }
+                            if (CurrentMap[i][j] == 5)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.Write(hero[k]);
+                                writed = true;
+                            }
 
-                        if (CurrentMap[i][j] == 3 && CurrentMap[i][j] != previousState[i][j])
-                        {
-                            Console.Write(floor[k]);
-                            writed = true;
-                        }
-                        if (CurrentMap[i][j] == 6 && CurrentMap[i][j] != previousState[i][j])
-                        {
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.Write(box[k]);
-                            writed = true;
-                        }
+                            if (CurrentMap[i][j] == 3 && CurrentMap[i][j] != previousState[i][j])
+                            {
+                                Console.Write(floor[k]);
+                                writed = true;
+                            }
+                            if (CurrentMap[i][j] == 6 && CurrentMap[i][j] != previousState[i][j])
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.Write(box[k]);
+                                writed = true;
+                            }
 
-                        if (CurrentMap[i][j] == 4 && CurrentMap[i][j] != previousState[i][j])
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write(point[k]);
-                            writed = true;
-                        }
-                        if (CurrentMap[i][j] == 2 && CurrentMap[i][j] != previousState[i][j])
-                        {
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write(wall[k]);
-                            writed = true;
-                        }
+                            if (CurrentMap[i][j] == 4 && CurrentMap[i][j] != previousState[i][j])
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(point[k]);
+                                writed = true;
+                            }
+                            if (CurrentMap[i][j] == 2 && CurrentMap[i][j] != previousState[i][j])
+                            {
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.Write(wall[k]);
+                                writed = true;
+                            }
 
-                        if (writed == false && Console.CursorLeft <= 57 + (CurrentMap[0].Count() * hero.Count()))
-                            Console.CursorLeft = Console.CursorLeft + hero.Count();
-                        writed = false;
+                            if (writed == false && Console.CursorLeft <= 57 + (CurrentMap[0].Count() * hero.Count()))
+                                Console.CursorLeft = Console.CursorLeft + hero.Count();
+                            writed = false;
 
+                        }
+                        Console.Write(Environment.NewLine);
+                        Console.CursorLeft = 57;
                     }
-                    Console.Write(Environment.NewLine);
-                    Console.CursorLeft = 57;
-                }
 
+                }
             }
         }
 
@@ -481,33 +495,37 @@ namespace sokoban
             Console.Clear();
             int number = mapNumber;
             mapNumber++;
-            initMap("sokoban_" + mapNumber + ".txt",false);
+            initMap("sokoban_" + mapNumber + ".txt", false);
         }
 
         private void printNumberSteps(int number, int previousNumber)
         {
-            if (number != previousNumber)
+            lock (writelock)
             {
-                previousNumber = number;
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.CursorTop = 4;
-                Console.CursorLeft = 21;
-                Console.Write(number.ToString());
+                if (number != previousNumber)
+                {
+                    previousNumber = number;
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.CursorTop = 4;
+                    Console.CursorLeft = 21;
+                    Console.Write(number.ToString());
+                }
             }
-
         }
 
         private void printNumberMovedBoxes(int number, int previousNumber)
         {
-            if (number != previousNumber)
+            lock (writelock)
             {
-                previousNumberMovedBoxes = number;
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.CursorTop = 6;
-                Console.CursorLeft = 34;
-                Console.Write(number.ToString());
+                if (number != previousNumber)
+                {
+                    previousNumberMovedBoxes = number;
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.CursorTop = 6;
+                    Console.CursorLeft = 34;
+                    Console.Write(number.ToString());
+                }
             }
-
         }
 
         private void play(List<List<int>> map)
@@ -588,8 +606,8 @@ namespace sokoban
                     }
                 }
             } while (true);
-        
-        
+
+
         }
 
     }
