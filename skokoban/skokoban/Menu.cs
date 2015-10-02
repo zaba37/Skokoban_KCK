@@ -23,7 +23,6 @@ namespace sokoban
         public Menu()
         {
             ranking = new Ranking();
-            game = new Game();
             Console.Clear();
             currentCursorPosition = 0;
             titleCounter = 0;
@@ -185,7 +184,7 @@ namespace sokoban
             {
                 case 0:
                     timer.Close();
-                    game.initMap();                
+                    game = new Game("sokoban_1.txt");               
                     break;
                 case 1:
                     timer.Close();
