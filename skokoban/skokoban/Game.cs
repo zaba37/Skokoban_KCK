@@ -24,8 +24,8 @@ namespace sokoban
         private int previousNumberMovedBoxes;
         private int mapNumber;
         private object writelock;
-        DateTime startTime;
-
+        private DateTime startTime;
+        private Timer t;
         public Game(string mapPath)
         {
             Hero heroObject = new Hero();
@@ -112,7 +112,7 @@ namespace sokoban
 
                 drawMap(ReadNumbers, map);
 
-                Timer t = new Timer(100);
+                t = new Timer(100);
                 t.AutoReset = true;
                 t.Elapsed += (s, e) => UpdateTime(e);
                 startTime = DateTime.Now;
@@ -492,6 +492,7 @@ namespace sokoban
 
         private void endRound()
         {
+            t.Stop();
             Console.Clear();
             int number = mapNumber;
             mapNumber++;
