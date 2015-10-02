@@ -518,6 +518,7 @@ namespace sokoban
             List<List<List<int>>> helpList;
             int[] heroPosition = findHeroPosition(Map);
             List<PointPosition> PointsPositionList = findPositionPoints(Map);
+            int SetBoxes = 0;
             do
             {
                 checkKey = Console.ReadKey(true);
