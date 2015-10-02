@@ -99,6 +99,7 @@ namespace sokoban
             bool writed = false;
             Console.CursorLeft = 57;
             Console.CursorTop = 7;
+
             for (int i = 0; i < CurrentMap.Count; i++)
             {
                 for (int k = 0; k < hero.Count(); k++)

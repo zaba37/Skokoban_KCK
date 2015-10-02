@@ -153,7 +153,6 @@ namespace sokoban
                 case 2: //back button
                     Menu menu = new Menu();
                     timer.Close();
-                    timer = null;
                     menu.run();
                     break;
             }
