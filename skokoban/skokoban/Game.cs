@@ -43,8 +43,8 @@ namespace sokoban
             Wall wallObject = new Wall();
             wall = wallObject.graphics;
 
-            mapNumber = 2;
-            initMap(mapPath);
+            mapNumber = 1;
+            initMap(mapPath,true);
 
         }
         private List<List<int>> readFile(string path)
@@ -78,7 +78,7 @@ namespace sokoban
         }
 
 
-        private void initMap(string pathFileMap)
+        private void initMap(string pathFileMap,bool firstStart)
         {
             Console.Clear();
             numberSteps = 0;
@@ -111,7 +111,8 @@ namespace sokoban
             t.Elapsed += (s, e) => UpdateTime(e);
             startTime = DateTime.Now;
             //t.Start();
-            play(ReadNumbers);
+            if(firstStart==true)
+                play(ReadNumbers);
         }
 
         private void UpdateTime(ElapsedEventArgs e)
@@ -481,7 +482,7 @@ namespace sokoban
             Console.Clear();
             int number = mapNumber;
             mapNumber++;
-            initMap("sokoban_" + number + ".txt");
+            initMap("sokoban_" + mapNumber + ".txt",false);
         }
 
         private void printNumberSteps(int number, int previousNumber)
@@ -532,6 +533,10 @@ namespace sokoban
                     if (CheckEndRound(SetBoxes, PointsPositionList))
                     {
                         endRound();
+                        Map = readFile("sokoban_" + mapNumber + ".txt");
+                        previousStateMap = copyMap(Map);
+                        heroPosition = findHeroPosition(Map);
+                        PointsPositionList = findPositionPoints(Map);
                     }
 
                 }
@@ -545,6 +550,10 @@ namespace sokoban
                     if (CheckEndRound(SetBoxes, PointsPositionList))
                     {
                         endRound();
+                        Map = readFile("sokoban_" + mapNumber + ".txt");
+                        previousStateMap = copyMap(Map);
+                        heroPosition = findHeroPosition(Map);
+                        PointsPositionList = findPositionPoints(Map);
                     }
                 }
                 if (checkKey.Key == ConsoleKey.A || checkKey.Key == ConsoleKey.LeftArrow)
@@ -557,6 +566,10 @@ namespace sokoban
                     if (CheckEndRound(SetBoxes, PointsPositionList))
                     {
                         endRound();
+                        Map = readFile("sokoban_" + mapNumber + ".txt");
+                        previousStateMap = copyMap(Map);
+                        heroPosition = findHeroPosition(Map);
+                        PointsPositionList = findPositionPoints(Map);
                     }
                 }
                 if (checkKey.Key == ConsoleKey.D || checkKey.Key == ConsoleKey.RightArrow)
@@ -569,9 +582,15 @@ namespace sokoban
                     if (CheckEndRound(SetBoxes, PointsPositionList))
                     {
                         endRound();
+                        Map = readFile("sokoban_" + mapNumber + ".txt");
+                        previousStateMap = copyMap(Map);
+                        heroPosition = findHeroPosition(Map);
+                        PointsPositionList = findPositionPoints(Map);
                     }
                 }
             } while (true);
+        
+        
         }
 
     }
