@@ -39,6 +39,7 @@ namespace sokoban
         {
             typewriter = Constants.getSoundPlayerInstance();
             typewriter.Stop();
+            typewriter.SoundLocation = "step.wav";
 
             isNewLevel = true;
 
@@ -321,6 +322,7 @@ namespace sokoban
                     map[heroPosition[0] - 1][heroPosition[1]] = 5;
                     toReturn.Add(map);
                     toReturn.Add(previousState);
+                    typewriter.Play();
                     numberSteps++;
                 }
                 if (map[heroPosition[0] - 1][heroPosition[1]] == 6) //gdy na gorze bedzie skrzynka
@@ -334,6 +336,7 @@ namespace sokoban
                         toReturn.Add(map);
                         toReturn.Add(previousState);
                         numberSteps++;
+                        typewriter.Play();
                         NumberMovedBoxes++;
                     }
                     else
@@ -350,6 +353,7 @@ namespace sokoban
                     map[heroPosition[0] - 1][heroPosition[1]] = 5;
                     toReturn.Add(map);
                     toReturn.Add(previousState);
+                    typewriter.Play();
                     numberSteps++;
                 }
             }
@@ -372,6 +376,7 @@ namespace sokoban
                     map[heroPosition[0] + 1][heroPosition[1]] = 5;
                     toReturn.Add(map);
                     toReturn.Add(previousState);
+                    typewriter.Play();
                     numberSteps++;
                 }
                 if (map[heroPosition[0] + 1][heroPosition[1]] == 6) //gdy na dole bedzie skrzynka
@@ -385,6 +390,7 @@ namespace sokoban
                         toReturn.Add(map);
                         toReturn.Add(previousState);
                         numberSteps++;
+                        typewriter.Play();
                         NumberMovedBoxes++;
                     }
                     else
@@ -401,6 +407,7 @@ namespace sokoban
                     map[heroPosition[0] + 1][heroPosition[1]] = 5;
                     toReturn.Add(map);
                     toReturn.Add(previousState);
+                    typewriter.Play();
                     numberSteps++;
                 }
             }
@@ -422,6 +429,7 @@ namespace sokoban
                     map[heroPosition[0]][heroPosition[1] + 1] = 5;
                     toReturn.Add(map);
                     toReturn.Add(previousState);
+                    typewriter.Play();
                     numberSteps++;
                 }
                 if (map[heroPosition[0]][heroPosition[1] + 1] == 6) //gdy na prawo bedzie skrzynka
@@ -434,6 +442,7 @@ namespace sokoban
                         map[heroPosition[0]][heroPosition[1] + 2] = 6;
                         toReturn.Add(map);
                         toReturn.Add(previousState);
+                        typewriter.Play();
                         numberSteps++;
                         NumberMovedBoxes++;
                     }
@@ -450,6 +459,7 @@ namespace sokoban
                     map[heroPosition[0]][heroPosition[1]] = 3;
                     map[heroPosition[0]][heroPosition[1] + 1] = 5;
                     toReturn.Add(map);
+                    typewriter.Play();
                     toReturn.Add(previousState);
                     numberSteps++;
                 }
@@ -472,6 +482,7 @@ namespace sokoban
                     map[heroPosition[0]][heroPosition[1] - 1] = 5;
                     toReturn.Add(map);
                     toReturn.Add(previousState);
+                    typewriter.Play();
                     numberSteps++;
                 }
                 if (map[heroPosition[0]][heroPosition[1] - 1] == 6) //gdy na lewo bedzie skrzynka
@@ -485,6 +496,7 @@ namespace sokoban
                         toReturn.Add(map);
                         toReturn.Add(previousState);
                         numberSteps++;
+                        typewriter.Play();
                         NumberMovedBoxes++;
                     }
                     else
@@ -501,6 +513,7 @@ namespace sokoban
                     map[heroPosition[0]][heroPosition[1] - 1] = 5;
                     toReturn.Add(map);
                     toReturn.Add(previousState);
+                    typewriter.Play();
                     numberSteps++;
                 }
             }
@@ -725,6 +738,12 @@ namespace sokoban
 
         private void resumeGame(List<List<int>> Map)
         {
+            typewriter.Stop();
+
+            if (typewriter.SoundLocation.CompareTo("step.wav") != 0)
+            {
+                typewriter.SoundLocation = "step.wav";
+            }
 
             List<List<int>> initMap = new List<List<int>>();
             for (int i = 0; i < Map.Count(); i++)
