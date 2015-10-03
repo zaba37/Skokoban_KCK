@@ -9,6 +9,7 @@ namespace sokoban
    public class Hero
     {
         public string[] graphics;
+
         public Hero()
         {
             this.graphics = new String[]

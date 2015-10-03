@@ -3,11 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Media;
 
 namespace sokoban
 {
     static class Constants
     {
+        private static SoundPlayer soundPlayer = null;
+
+        public static SoundPlayer getSoundPlayerInstance(){
+            if(soundPlayer == null){
+                soundPlayer = new SoundPlayer();
+                return soundPlayer;
+            }
+            else
+            {
+                return soundPlayer;
+            }
+        }
+
         public static String[] title = new String[]
             {
                    @"  ______    ______   __    __   ______   _______    ______   __    __ ",

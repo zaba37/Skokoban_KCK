@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Media;
 
 namespace sokoban
 {
@@ -18,9 +19,20 @@ namespace sokoban
         private ConsoleKeyInfo checkKey;
         private Game game;
         private Ranking ranking;
+        private SoundPlayer typewriter;
 
         public Menu()
         {
+            typewriter = Constants.getSoundPlayerInstance();
+
+            String sss = typewriter.SoundLocation;
+
+            if (typewriter.SoundLocation.CompareTo("mainMusic.wav") != 0)
+            {
+                typewriter.SoundLocation = "mainMusic.wav";
+                typewriter.PlayLooping();
+            }
+
             ranking = new Ranking();
             Console.Clear();
             currentCursorPosition = 0;
@@ -46,7 +58,7 @@ namespace sokoban
             timer.Interval = 500;
             timer.Elapsed += OnTimedEvent;
             timer.AutoReset = true;
-            
+
             checkKey = new ConsoleKeyInfo();
         }
 
@@ -58,12 +70,12 @@ namespace sokoban
 
             int cursorTopPosition = 2;
 
-            foreach (string line in titleList.ElementAt(titleCounter%6))
+            foreach (string line in titleList.ElementAt(titleCounter % 6))
             {
                 Console.CursorTop = cursorTopPosition;
                 Console.CursorLeft = Console.WindowWidth / 4;
                 Console.WriteLine(line);
-                cursorTopPosition++; 
+                cursorTopPosition++;
             }
 
             titleCounter++;
@@ -72,7 +84,7 @@ namespace sokoban
             printMenuItem(1);
             printMenuItem(2);
 
-            while(true)
+            while (true)
             {
                 checkKey = Console.ReadKey(true);
 
@@ -183,7 +195,7 @@ namespace sokoban
             {
                 case 0:
                     timer.Close();
-                    game = new Game("sokoban_1.txt");               
+                    game = new Game("sokoban_1.txt");
                     break;
                 case 1:
                     timer.Close();

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Timers;
-//using System.Threading;
+using System.Media;
 
 
 namespace sokoban
@@ -29,9 +29,13 @@ namespace sokoban
         private Timer timerPauseMenu;
         private bool pauseMenu = false;
         private int currentPositionInPauseMenu;
+        private SoundPlayer typewriter;
 
         public Game(string mapPath)
         {
+            typewriter = Constants.getSoundPlayerInstance();
+            typewriter.Stop();
+
             currentPositionInPauseMenu = 0;
 
             timerPauseMenu = new Timer(500);
@@ -656,6 +660,8 @@ namespace sokoban
                     if (checkKey.Key == ConsoleKey.Escape)
                     {
                         timer.Stop();
+                        typewriter.SoundLocation = "pauseMusic.wav";
+                        typewriter.PlayLooping();
                         pauseMenu = true;
                         Constants.printPauseMenu();
                     }
