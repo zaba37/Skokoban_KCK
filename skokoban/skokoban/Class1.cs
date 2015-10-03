@@ -201,7 +201,9 @@ namespace sokoban
                     @"| |      | |__     \ \  / /  | |__    | |     ",
                     @"| |      |  __|     \ \/ /   |  __|   | |     ",
                     @"| |____  | |____     \  /    | |____  | |____ ",
-                    @"|______| |______|     \/     |______| |______|"
+                    @"|______| |______|     \/     |______| |______|",
+                    @"                                              ",
+                    @"                Press any key to continue     "
         };
 
         public static String[] resume = new String[]
@@ -446,6 +448,87 @@ namespace sokoban
             {
                 Console.CursorLeft = 68;
                 Console.WriteLine(line);
+            }
+        }
+
+        public static void printLevel(int lvl)
+        {
+            printFrame();
+            Console.CursorTop = 18;
+
+            foreach (string line in level)
+            {
+                Console.CursorLeft = 50;
+                Console.WriteLine(line);
+            }
+
+            Console.CursorTop = 18;
+
+            switch (lvl)
+            {
+                case 1:
+                    foreach (string line in number1)
+                    {
+                        Console.CursorLeft = 100;
+                        Console.WriteLine(line);
+                    }
+                    break;
+                case 2:
+                    foreach (string line in number2)
+                    {
+                        Console.CursorLeft = 100;
+                        Console.WriteLine(line);
+                    }
+                    break;
+                case 3:
+                    foreach (string line in number3)
+                    {
+                        Console.CursorLeft = 100;
+                        Console.WriteLine(line);
+                    }
+                    break;
+                case 4:
+                    foreach (string line in number4)
+                    {
+                        Console.CursorLeft = 100;
+                        Console.WriteLine(line);
+                    }
+                    break;
+                case 5:
+                    foreach (string line in number5)
+                    {
+                        Console.CursorLeft = 100;
+                        Console.WriteLine(line);
+                    }
+                    break;
+                case 6:
+                    foreach (string line in number6)
+                    {
+                        Console.CursorLeft = 100;
+                        Console.WriteLine(line);
+                    }
+                    break;
+                case 7:
+                    foreach (string line in number7)
+                    {
+                        Console.CursorLeft = 100;
+                        Console.WriteLine(line);
+                    }
+                    break;
+                case 8:
+                    foreach (string line in number8)
+                    {
+                        Console.CursorLeft = 100;
+                        Console.WriteLine(line);
+                    }
+                    break;
+                case 9:
+                    foreach (string line in number9)
+                    {
+                        Console.CursorLeft = 100;
+                        Console.WriteLine(line);
+                    }
+                    break;
             }
         }
     }

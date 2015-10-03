@@ -32,12 +32,15 @@ namespace sokoban
         private int currentPositionInPauseMenu;
         private SoundPlayer typewriter;
         private String elapsedTime;
-        DateTime pauseTime;
+        private DateTime pauseTime;
+        private bool isNewLevel;
 
         public Game(string mapPath)
         {
             typewriter = Constants.getSoundPlayerInstance();
             typewriter.Stop();
+
+            isNewLevel = true;
 
             currentPositionInPauseMenu = 0;
 
@@ -538,6 +541,7 @@ namespace sokoban
             Console.Clear();
             int number = mapNumber;
             mapNumber++;
+            isNewLevel = true;
             initMap("sokoban_" + mapNumber + ".txt", false);
         }
 
@@ -583,9 +587,24 @@ namespace sokoban
 
             do
             {
+                if(isNewLevel){
+                    timer.Stop();
+                    Console.Clear();
+                    Constants.printLevel(mapNumber);
+                }
+
                 checkKey = Console.ReadKey(true);
+
                 if (!pauseMenu)
                 {
+                    if (isNewLevel)
+                    {
+                        Console.Clear();
+                        isNewLevel = false;
+                        resumeGame(Map);
+                        timer.Start();
+                    }
+                    
                     if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
                     {
                         helpList = refreshLists(Map, previousStateMap, 1, 0, 0, 0, PointsPositionList);
