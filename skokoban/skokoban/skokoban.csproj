@@ -7,7 +7,7 @@
     <ProjectGuid>{7A337FC1-492A-442E-9BA8-458C6004EA5C}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>sokoban</RootNamespace>
+    <RootNamespace>Constant</RootNamespace>
     <AssemblyName>skokoban</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -45,12 +45,10 @@
   <ItemGroup>
     <Compile Include="Box.cs" />
     <Compile Include="Class1.cs" />
-    <Compile Include="Class2.cs" />
     <Compile Include="Floor.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Hero.cs" />
     <Compile Include="Menu.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="PointPosition.cs" />
     <Compile Include="Program.cs" />
@@ -62,6 +60,8 @@
     <None Include="App.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="ClassDiagram2.cd" />
+    <None Include="ClassDiagram3.cd" />
+    <None Include="ClassDiagram4.cd" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

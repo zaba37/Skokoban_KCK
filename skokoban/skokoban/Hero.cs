@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace sokoban
 {
-   public class Hero
+    public class Hero
     {
-        public string[] graphics;
+        private string[] graphics;
         public Hero()
         {
             this.graphics = new String[]
@@ -17,6 +17,12 @@ namespace sokoban
                     @"┤█├",
                     @"┘ └"
             };
+
+        }
+
+        public string[] getObject()
+        {
+            return graphics;
         }
     }
 }
