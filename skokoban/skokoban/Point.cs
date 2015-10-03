@@ -8,15 +8,19 @@ namespace sokoban
 {
     public class Point
     {
-        public string[] graphics;
+        private string[] graphics;
         public Point()
         {
             this.graphics = new String[]
             {
-                    @"---",
-                    @"---",
-                    @"---"
+                    @"═══",
+                    @"═══",
+                    @"═══"
             };
+        }
+        public string[] getObject()
+        {
+            return graphics;
         }
     }
 }
