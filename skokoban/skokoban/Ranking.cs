@@ -115,7 +115,7 @@ namespace sokoban
                 else if (checkKey.Key == ConsoleKey.Enter)
                 {
                     selectedAction(currentCursorPosition);
-                    break;
+                    //break;
                 }
             }
 
@@ -211,7 +211,6 @@ namespace sokoban
             switch (select)
             {
                 case 0: //arrow up
-                    
                     if(from > 0)
                     {
                         from--;
@@ -221,10 +220,11 @@ namespace sokoban
                     
                     break;
                 case 1: //arrow down
+                    if (to < RankingItemList.Count()){ 
                     from++;
                     to++;
                     printRanking(from,to);
-                    
+                    }
                     break;
                 case 2: //back button
                     Menu menu = new Menu();
