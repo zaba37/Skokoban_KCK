@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Box.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="EndGame.cs" />
     <Compile Include="Floor.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Hero.cs" />

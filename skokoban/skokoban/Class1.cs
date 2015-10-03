@@ -137,6 +137,19 @@ namespace sokoban
                      @"|_| \_|\___| \_/\_/    \_____|\__,_|_| |_| |_|\___|"
             };
 
+        public static String[] gameOver = new String[]
+        {
+                    @"  ______    ______   __       __  ________         ______   __     __  ________  _______  ",      
+                    @" /      \  /      \ |  \     /  \|        \       /      \ |  \   |  \|        \|       \ ",      
+                    @"|  $$$$$$\|  $$$$$$\| $$\   /  $$| $$$$$$$$      |  $$$$$$\| $$   | $$| $$$$$$$$| $$$$$$$\",      
+                    @"| $$ __\$$| $$__| $$| $$$\ /  $$$| $$__          | $$  | $$| $$   | $$| $$__    | $$__| $$",      
+                    @"| $$|    \| $$    $$| $$$$\  $$$$| $$  \         | $$  | $$ \$$\ /  $$| $$  \   | $$    $$",      
+                    @"| $$ \$$$$| $$$$$$$$| $$\$$ $$ $$| $$$$$         | $$  | $$  \$$\  $$ | $$$$$   | $$$$$$$\",      
+                    @"| $$__| $$| $$  | $$| $$ \$$$| $$| $$_____       | $$__/ $$   \$$ $$  | $$_____ | $$  | $$",      
+                    @" \$$    $$| $$  | $$| $$  \$ | $$| $$     \       \$$    $$    \$$$   | $$     \| $$  | $$",      
+                    @"  \$$$$$$  \$$   \$$ \$$      \$$ \$$$$$$$$        \$$$$$$      \$     \$$$$$$$$ \$$   \$$"    
+        };
+
         public static String[] menuItemRanking = new String[]
             {
                     @" _____             _    _             ",
@@ -224,6 +237,28 @@ namespace sokoban
                      @"|  _  /|  __|  \___ \   | | / /\ \ |  _  /  | |   ",
                      @"| | \ \| |____ ____) |  | |/ ____ \| | \ \  | |   ",
                      @"|_|  \_\______|_____/   |_/_/    \_\_|  \_\ |_|   "                                                 
+        };
+
+        public static String[] gameOvertext = new String[]
+        {
+                     @"  _____                                                                _ _                                   _    _               _ ",
+                     @" / ____|                                                              | | |                                 | |  (_)             | |",
+                     @"| (___   __ ___   _____   _   _  ___  _   _ _ __   _ __ ___  ___ _   _| | |_    ___  _ __    _ __ __ _ _ __ | | ___ _ __   __ _  | |",
+                     @" \___ \ / _` \ \ / / _ \ | | | |/ _ \| | | | '__| | '__/ _ \/ __| | | | | __|  / _ \| '_ \  | '__/ _` | '_ \| |/ / | '_ \ / _` | | |",
+                     @" ____) | (_| |\ V /  __/ | |_| | (_) | |_| | |    | | |  __/\__ \ |_| | | |_  | (_) | | | | | | | (_| | | | |   <| | | | | (_| | |_|",
+                     @"|_____/ \__,_| \_/ \___|  \__, |\___/ \__,_|_|    |_|  \___||___/\__,_|_|\__|  \___/|_| |_| |_|  \__,_|_| |_|_|\_\_|_| |_|\__, | (_)",
+                     @"                           __/ |                                                                                           __/ |    ",
+                     @"                          |___/                                                                                           |___/     "
+        };
+
+        public static String[] save = new String[]
+        {
+                     @"  _____      __      __ ______ ",
+                     @" / ____|   /\\ \    / /|  ____|",
+                     @"| (___    /  \\ \  / / | |__   ",
+                     @" \___ \  / /\ \\ \/ /  |  __|  ",
+                     @" ____) |/ ____ \\  /   | |____ ",
+                     @"|_____//_/    \_\\/    |______|"
         };
 
         public static String[] number0 = new String[]
@@ -385,6 +420,62 @@ namespace sokoban
 
             Console.CursorLeft = 4;
             Console.WriteLine("╚═════════════════════════════════╝");
+        }
+
+        public static void printGameOverScreen()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.SetCursorPosition(0,0);
+            printFrame();
+
+            Console.SetCursorPosition(0, 3);
+
+            foreach(String line in gameOver)
+            {
+                Console.CursorLeft = 30;
+                Console.WriteLine(line);
+            }
+
+            Console.CursorTop = Console.CursorTop + 2;
+
+            foreach (String line in gameOvertext)
+            {
+                Console.CursorLeft = 15;
+                Console.WriteLine(line);
+            }
+
+            Console.CursorTop = Console.CursorTop + 2;
+            Console.CursorLeft = 60;
+            Console.WriteLine("╔═════════════════════════════════╗");
+            Console.CursorLeft = 60;
+            Console.WriteLine("║                                 ║");
+            Console.CursorLeft = 60;
+            Console.WriteLine("╚═════════════════════════════════╝");
+
+            printSave();
+            printExitInEnd();
+            
+        }
+
+        public static void printSave()
+        {
+            Console.CursorTop = 40;
+            foreach (String line in save)
+            {
+                Console.CursorLeft = 4;
+                Console.WriteLine(line);
+            }
+        }
+
+        public static void printExitInEnd()
+        {
+            Console.CursorTop = 40;
+            foreach (String line in menuItemExit)
+            {
+                Console.CursorLeft = 130;
+                Console.WriteLine(line);
+            }
         }
 
         public static void printBackButton()

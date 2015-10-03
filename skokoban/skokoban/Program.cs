@@ -17,8 +17,11 @@ namespace sokoban
             typewriter.SoundLocation = "mainMusic.wav";
             typewriter.PlayLooping();
 
-            Menu menu = new Menu();
-            menu.run();
+            EndGame end = new EndGame(10);
+            end.run();
+            Console.ReadKey();
+           // Menu menu = new Menu();
+           // menu.run();
         }
 
     }
