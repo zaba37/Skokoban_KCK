@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using System.Xml.Serialization;
+
 
 
 namespace sokoban
@@ -79,7 +79,13 @@ namespace sokoban
             }
 
             loadRanking();
-            printRanking(0,20);
+            if(RankingItemList.Count()>20){
+                printRanking(0,20);
+            }
+            else
+            {
+                printRanking(0, RankingItemList.Count());
+            }
             while (true)
             {
                 checkKey = Console.ReadKey(true);
@@ -124,6 +130,15 @@ namespace sokoban
         private void printRanking(int from, int to)
         {
             Console.SetCursorPosition(63, 25);
+            for (int i = 0; i < 20; i++)
+            {
+                Console.Write("            ");
+                Console.CursorLeft = 80;
+                Console.WriteLine("            ");
+                Console.CursorLeft = 63;
+            }
+
+            Console.SetCursorPosition(63, 25);
             for(var i = from; i < to; i++)
             {
                 Console.Write(RankingItemList[i].name);
@@ -159,7 +174,6 @@ namespace sokoban
             {
                 return y.score.CompareTo(x.score);
             });
-            
             file.Close();
         }
 
@@ -227,6 +241,7 @@ namespace sokoban
                     }
                     break;
                 case 2: //back button
+                    saveRanking();
                     Menu menu = new Menu();
                     timer.Close();
                     menu.run();
