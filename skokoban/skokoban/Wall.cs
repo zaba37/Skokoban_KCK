@@ -8,7 +8,7 @@ namespace sokoban
 {
     public class Wall
     {
-        public string[] graphics;
+        private string[] graphics;
         public Wall()
         {
             this.graphics = new String[]
@@ -17,6 +17,10 @@ namespace sokoban
                     @"|||",
                     @"|||"
             };
+        }
+        public string[] getObject()
+        {
+            return graphics;
         }
     }
 }

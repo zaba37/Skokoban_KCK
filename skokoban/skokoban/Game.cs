@@ -11,11 +11,12 @@ namespace sokoban
 {
     public class Game
     {
-        private String[] hero;
-        private String[] box;
-        private String[] wall;
-        private String[] point;
-        private String[] floor;
+        private Hero heroObject;
+        private Box boxObject;
+        private Point pointObject;
+        private Floor floorObject;
+        private Wall wallObject;
+        private List<List<int>> Map;
         private ConsoleKeyInfo checkKey;
         private List<PointPosition> pointsList;
         private int numberSteps;
@@ -29,6 +30,8 @@ namespace sokoban
         private Timer timerPauseMenu;
         private bool pauseMenu = false;
         private int currentPositionInPauseMenu;
+        private String elapsedTime;
+        DateTime pauseTime;
 
         public Game(string mapPath)
         {
@@ -38,22 +41,13 @@ namespace sokoban
             timerPauseMenu.AutoReset = true;
             timerPauseMenu.Elapsed += (s, e) => pasueMenuTick(e);
             timerPauseMenu.Start();
-
-            Hero heroObject = new Hero();
-            hero = heroObject.graphics;
-
-            Box boxObject = new Box();
-            box = boxObject.graphics;
-
-            Point pointObject = new Point();
-            point = pointObject.graphics;
-
-            Floor floorObject = new Floor();
-            floor = floorObject.graphics;
-
-            Wall wallObject = new Wall();
-            wall = wallObject.graphics;
-
+            
+            heroObject = new Hero();
+            boxObject = new Box();
+            pointObject = new Point();
+            floorObject = new Floor();
+            wallObject = new Wall();
+ 
             mapNumber = 1;
             writelock = new object();
             initMap(mapPath, true);
@@ -80,13 +74,13 @@ namespace sokoban
         {
             Console.CursorTop = 4;
             Console.CursorLeft = 7;
-            Console.Write("Ilosc krokow: 0");
+            Console.Write("Ilosc krokow: " + numberSteps.ToString());
             Console.CursorTop = 6;
             Console.CursorLeft = 7;
-            Console.Write("Ilosc przesuniec skrzynek: 0");
+            Console.Write("Ilosc przesuniec skrzynek: " + NumberMovedBoxes.ToString());
             Console.CursorTop = 8;
             Console.CursorLeft = 7;
-            Console.Write("Czas: 0");
+            Console.Write("Czas: " + (DateTime.Now - startTime).ToString(@"hh\:mm\:ss"));
         }
 
 
@@ -107,6 +101,7 @@ namespace sokoban
             {
                 Constants.printFrame();
                 Constants.printFrameForCounters();
+                startTime = DateTime.Now;
                 printInformation();
                 Console.CursorLeft = 57;
                 Console.CursorTop = 7;
@@ -137,14 +132,14 @@ namespace sokoban
         {
             lock (writelock)
             {
-                if(!pauseMenu)
+                if (!pauseMenu)
                 {
-                var elapsedTime = (DateTime.Now - startTime).ToString(@"hh\:mm\:ss");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.CursorTop = 8;
-                Console.CursorLeft = 13;
+                    elapsedTime = (DateTime.Now - startTime).ToString(@"hh\:mm\:ss");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.CursorTop = 8;
+                    Console.CursorLeft = 13;
 
-                Console.Write(elapsedTime);
+                    Console.Write(elapsedTime);
                 }
                 else
                 {
@@ -167,7 +162,7 @@ namespace sokoban
         {
             lock (writelock)
             {
-                if(pauseMenu)
+                if (pauseMenu)
                 {
                     if (Console.ForegroundColor == ConsoleColor.Yellow)
                     {
@@ -198,44 +193,44 @@ namespace sokoban
                 Console.CursorTop = 7;
                 for (int i = 0; i < CurrentMap.Count; i++)
                 {
-                    for (int k = 0; k < hero.Count(); k++)
+                    for (int k = 0; k < heroObject.getObject().Count(); k++)
                     {
                         for (int j = 0; j < CurrentMap[i].Count; j++)
                         {
                             if (CurrentMap[i][j] == 5)
                             {
                                 Console.ForegroundColor = ConsoleColor.Blue;
-                                Console.Write(hero[k]);
+                                Console.Write(heroObject.getObject()[k]);
                                 writed = true;
                             }
 
                             if (CurrentMap[i][j] == 3 && CurrentMap[i][j] != previousState[i][j])
                             {
-                                Console.Write(floor[k]);
+                                Console.Write(floorObject.getObject()[k]);
                                 writed = true;
                             }
                             if (CurrentMap[i][j] == 6 && CurrentMap[i][j] != previousState[i][j])
                             {
                                 Console.ForegroundColor = ConsoleColor.Green;
-                                Console.Write(box[k]);
+                                Console.Write(boxObject.getObject()[k]);
                                 writed = true;
                             }
 
                             if (CurrentMap[i][j] == 4 && CurrentMap[i][j] != previousState[i][j])
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
-                                Console.Write(point[k]);
+                                Console.Write(pointObject.getObject()[k]);
                                 writed = true;
                             }
                             if (CurrentMap[i][j] == 2 && CurrentMap[i][j] != previousState[i][j])
                             {
                                 Console.ForegroundColor = ConsoleColor.White;
-                                Console.Write(wall[k]);
+                                Console.Write(wallObject.getObject()[k]);
                                 writed = true;
                             }
 
-                            if (writed == false && Console.CursorLeft <= 57 + (CurrentMap[0].Count() * hero.Count()))
-                                Console.CursorLeft = Console.CursorLeft + hero.Count();
+                            if (writed == false && Console.CursorLeft <= 57 + (CurrentMap[0].Count() * heroObject.getObject().Count()))
+                                Console.CursorLeft = Console.CursorLeft + heroObject.getObject().Count();
                             writed = false;
 
                         }
@@ -575,7 +570,7 @@ namespace sokoban
         private void play(List<List<int>> map)
         {
             checkKey = new ConsoleKeyInfo();
-            List<List<int>> Map = map;
+            Map = map;
             List<List<int>> previousStateMap = copyMap(Map);
             List<List<List<int>>> helpList;
             int[] heroPosition = findHeroPosition(Map);
@@ -655,6 +650,7 @@ namespace sokoban
 
                     if (checkKey.Key == ConsoleKey.Escape)
                     {
+                        pauseTime = DateTime.Now;
                         timer.Stop();
                         pauseMenu = true;
                         Constants.printPauseMenu();
@@ -662,7 +658,7 @@ namespace sokoban
                 }
                 else
                 {
-                    if(checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
+                    if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         printMenuItem(currentPositionInPauseMenu);
@@ -695,12 +691,39 @@ namespace sokoban
                     if (checkKey.Key == ConsoleKey.Enter)
                     {
                         selectedAction(currentPositionInPauseMenu);
-                        break;
+
                     }
                 }
             } while (true);
         }
 
+
+        private void resumeGame(List<List<int>> Map)
+        {
+
+            List<List<int>> initMap = new List<List<int>>();
+            for (int i = 0; i < Map.Count(); i++)
+            {
+                List<int> initList = new List<int>();
+                for (int j = 0; j < Map[i].Count(); j++)
+                {
+                    initList.Add(-1);
+                }
+                initMap.Add(initList);
+            }
+            lock (writelock)
+            {
+                Constants.printFrame();
+                Constants.printFrameForCounters();
+                printInformation();
+                printNumberSteps(numberSteps, PreviousNumberSteps);
+                printNumberMovedBoxes(NumberMovedBoxes, previousNumberMovedBoxes);
+            }
+            drawMap(Map, initMap);
+            var difference = DateTime.Now - pauseTime;
+            startTime = startTime.Add(difference);
+            timer.Start();
+        }
 
         private void printMenuItem(int select)
         {
@@ -722,7 +745,7 @@ namespace sokoban
                 case 0:
                     pauseMenu = false;
                     Console.Clear();
-                    //timer.Start();
+                    resumeGame(Map);
                     break;
                 case 1:
                     timerPauseMenu.Stop();
