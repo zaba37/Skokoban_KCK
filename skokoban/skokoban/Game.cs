@@ -711,7 +711,7 @@ namespace sokoban
 
                         if (currentPositionInPauseMenu == 0)
                         {
-                            currentPositionInPauseMenu = 1;
+                            currentPositionInPauseMenu = 2;
                         }
                         else
                         {
@@ -724,7 +724,7 @@ namespace sokoban
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         printMenuItem(currentPositionInPauseMenu);
 
-                        if (currentPositionInPauseMenu == 1)
+                        if (currentPositionInPauseMenu == 2)
                         {
                             currentPositionInPauseMenu = 0;
                         }
@@ -785,6 +785,9 @@ namespace sokoban
                     Constants.printResumePM();
                     break;
                 case 1:
+                    Constants.printRestratPM();
+                    break;
+                case 2:
                     Constants.printExitPM();
                     break;
             }
@@ -800,6 +803,18 @@ namespace sokoban
                     resumeGame(Map);
                     break;
                 case 1:
+                    typewriter.Stop();
+
+                    if (typewriter.SoundLocation.CompareTo("step.wav") != 0)
+                    {
+                        typewriter.SoundLocation = "step.wav";
+                    }
+
+                    pauseMenu = false;
+                    Console.Clear();
+                    initMap("sokoban_" + mapNumber + ".txt", true);
+                    break;
+                case 2:
                     timerPauseMenu.Stop();
                     Menu menu = new Menu();
                     menu.run();

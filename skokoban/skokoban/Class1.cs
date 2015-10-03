@@ -216,6 +216,16 @@ namespace sokoban
                     @" |_|  \_\ |______| |_____/   \____/  |_|  |_| |______|"
         };
 
+        public static String[] restart = new String[]
+        {
+                     @" _____  ______  _____ _______       _____ _______ ",
+                     @"|  __ \|  ____|/ ____|__   __|/\   |  __ \__   __|",
+                     @"| |__) | |__  | (___    | |  /  \  | |__) | | |   ",
+                     @"|  _  /|  __|  \___ \   | | / /\ \ |  _  /  | |   ",
+                     @"| | \ \| |____ ____) |  | |/ ____ \| | \ \  | |   ",
+                     @"|_|  \_\______|_____/   |_/_/    \_\_|  \_\ |_|   "                                                 
+        };
+
         public static String[] number0 = new String[]
         {
                     @"  ___  ",
@@ -426,6 +436,7 @@ namespace sokoban
             }
 
             printResumePM();
+            printRestratPM();
             printExitPM();
         }
 
@@ -442,7 +453,7 @@ namespace sokoban
 
         public static void printExitPM()
         {
-            Console.CursorTop = 24;
+            Console.CursorTop = 31;
 
             foreach (string line in menuItemExit)
             {
@@ -450,6 +461,18 @@ namespace sokoban
                 Console.WriteLine(line);
             }
         }
+
+        public static void printRestratPM()
+        {
+            Console.CursorTop = 23;
+
+            foreach (string line in restart)
+            {
+                Console.CursorLeft = 55;
+                Console.WriteLine(line);
+            }
+        }
+
 
         public static void printLevel(int lvl)
         {
