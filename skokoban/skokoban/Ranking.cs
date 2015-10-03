@@ -32,7 +32,8 @@ namespace sokoban
         private int currentCursorPosition;
         private ConsoleKeyInfo checkKey;
         public List<RankingItem> RankingItemList = new List<RankingItem>();
-
+        private int from = 0;
+        private int to = 20;
 
         public Ranking()
         {
@@ -76,9 +77,9 @@ namespace sokoban
                 Console.CursorLeft = 57;
                 Console.WriteLine(line);
             }
-            
+
             loadRanking();
-            printRanking();
+            printRanking(0,20);
             while (true)
             {
                 checkKey = Console.ReadKey(true);
@@ -114,26 +115,26 @@ namespace sokoban
                 else if (checkKey.Key == ConsoleKey.Enter)
                 {
                     selectedAction(currentCursorPosition);
-                    break;
+                    //break;
                 }
             }
 
         }
 
-        private void printRanking()
+        private void printRanking(int from, int to)
         {
-            foreach (var RankingItem in RankingItemList)
+            Console.SetCursorPosition(63, 25);
+            for(var i = from; i < to; i++)
             {
-                Console.Write(RankingItem.name);
+                Console.Write(RankingItemList[i].name);
                 Console.CursorLeft = 80;
-                Console.WriteLine(RankingItem.score);
+                Console.WriteLine(RankingItemList[i].score);
                 Console.CursorLeft = 63;
             }
         }
 
         private void loadRanking()
         {
-            Console.SetCursorPosition(63, 25);
             string line;
             String fileName = @"ranking.txt";
             System.IO.StreamReader file;
@@ -159,9 +160,9 @@ namespace sokoban
                 return y.score.CompareTo(x.score);
             });
             
-
             file.Close();
         }
+
         public void addScore(string name, int score)
         {
             RankingItemList.Add(new RankingItem(name, score));
@@ -210,10 +211,20 @@ namespace sokoban
             switch (select)
             {
                 case 0: //arrow up
-
+                    if(from > 0)
+                    {
+                        from--;
+                        to--;
+                        printRanking(from, to);
+                    }
+                    
                     break;
                 case 1: //arrow down
-
+                    if (to < RankingItemList.Count()){ 
+                    from++;
+                    to++;
+                    printRanking(from,to);
+                    }
                     break;
                 case 2: //back button
                     Menu menu = new Menu();
