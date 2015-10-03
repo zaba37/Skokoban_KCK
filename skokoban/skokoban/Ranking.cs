@@ -3,14 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Xml.Serialization;
+
 
 namespace sokoban
 {
+
+
+    class RankingItem 
+    {
+        public int score { get; set; }
+        public string name { get; set; }
+
+        public RankingItem(string n, int s)
+        {
+            name = n;
+            score = s;
+        }
+
+    }
+
+   
+
     class Ranking
     {
         private System.Timers.Timer timer;
         private int currentCursorPosition;
         private ConsoleKeyInfo checkKey;
+        public List<RankingItem> RankingItemList = new List<RankingItem>();
+
 
         public Ranking()
         {
@@ -54,9 +76,9 @@ namespace sokoban
                 Console.CursorLeft = 57;
                 Console.WriteLine(line);
             }
-
+            
             loadRanking();
-
+            printRanking();
             while (true)
             {
                 checkKey = Console.ReadKey(true);
@@ -98,14 +120,25 @@ namespace sokoban
 
         }
 
+        private void printRanking()
+        {
+            foreach (var RankingItem in RankingItemList)
+            {
+                Console.Write(RankingItem.name);
+                Console.CursorLeft = 80;
+                Console.WriteLine(RankingItem.score);
+                Console.CursorLeft = 63;
+            }
+        }
+
         private void loadRanking()
         {
-            Console.SetCursorPosition(10,10);
+            Console.SetCursorPosition(63, 25);
             string line;
             String fileName = @"ranking.txt";
             System.IO.StreamReader file;
 
-            if(System.IO.File.Exists(fileName))
+            if (System.IO.File.Exists(fileName))
             {
                 file = new System.IO.StreamReader(fileName);
             }
@@ -114,14 +147,46 @@ namespace sokoban
                 System.IO.File.Create(fileName).Close();
                 file = new System.IO.StreamReader(fileName);
             }
-
+            
             while ((line = file.ReadLine()) != null)
             {
-                System.Console.WriteLine(line);
-                Console.CursorLeft = 10;
+                string[] namescore;
+                namescore = line.Split(' ');
+                RankingItemList.Add(new RankingItem(namescore[0], Int32.Parse(namescore[1])));
             }
+            RankingItemList.Sort(delegate(RankingItem x, RankingItem y)
+            {
+                return y.score.CompareTo(x.score);
+            });
+            
 
             file.Close();
+        }
+        public void addScore(string name, int score)
+        {
+            RankingItemList.Add(new RankingItem(name, score));
+        }
+
+        private void saveRanking()
+        {
+            String fileName = @"ranking.txt";
+            System.IO.StreamWriter file;
+            if (System.IO.File.Exists(fileName))
+            {
+                file = new System.IO.StreamWriter(fileName);
+            }
+            else
+            {
+                System.IO.File.Create(fileName).Close();
+                file = new System.IO.StreamWriter(fileName);
+            }
+            foreach (var RankingItem in RankingItemList)
+            {
+                file.WriteLine("{0} {1}", RankingItem.name, RankingItem.score);
+            }
+            file.Close();
+            
+            
         }
 
         private void printMenuItem(int select)
