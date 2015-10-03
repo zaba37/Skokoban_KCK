@@ -9,8 +9,6 @@ using System.IO;
 
 namespace sokoban
 {
-
-
     class RankingItem 
     {
         public int score { get; set; }
@@ -28,6 +26,7 @@ namespace sokoban
 
     class Ranking
     {
+        private object writelock;
         private System.Timers.Timer timer;
         private int currentCursorPosition;
         private ConsoleKeyInfo checkKey;
@@ -39,6 +38,8 @@ namespace sokoban
         {
             currentCursorPosition = 0;
 
+            writelock = new object();
+            
             timer = new System.Timers.Timer();
             timer.Interval = 500;
             timer.Elapsed += OnTimedEvent;
@@ -86,42 +87,46 @@ namespace sokoban
             {
                 printRanking(0, RankingItemList.Count());
             }
+
             while (true)
             {
                 checkKey = Console.ReadKey(true);
 
-                if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
+                lock(writelock)
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    printMenuItem(currentCursorPosition);
+                    if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        printMenuItem(currentCursorPosition);
 
-                    if (currentCursorPosition == 0)
-                    {
-                        currentCursorPosition = 2;
+                        if (currentCursorPosition == 0)
+                        {
+                            currentCursorPosition = 2;
+                        }
+                        else
+                        {
+                            currentCursorPosition--;
+                        }
                     }
-                    else
+                    else if (checkKey.Key == ConsoleKey.S || checkKey.Key == ConsoleKey.DownArrow)
                     {
-                        currentCursorPosition--;
-                    }
-                }
-                else if (checkKey.Key == ConsoleKey.S || checkKey.Key == ConsoleKey.DownArrow)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    printMenuItem(currentCursorPosition);
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        printMenuItem(currentCursorPosition);
 
-                    if (currentCursorPosition == 2)
-                    {
-                        currentCursorPosition = 0;
+                        if (currentCursorPosition == 2)
+                        {
+                            currentCursorPosition = 0;
+                        }
+                        else
+                        {
+                            currentCursorPosition++;
+                        }
                     }
-                    else
+                    else if (checkKey.Key == ConsoleKey.Enter)
                     {
-                        currentCursorPosition++;
+                        selectedAction(currentCursorPosition);
+                        //break;
                     }
-                }
-                else if (checkKey.Key == ConsoleKey.Enter)
-                {
-                    selectedAction(currentCursorPosition);
-                    //break;
                 }
             }
 
@@ -129,7 +134,9 @@ namespace sokoban
 
         private void printRanking(int from, int to)
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.SetCursorPosition(63, 25);
+
             for (int i = 0; i < 20; i++)
             {
                 Console.Write("            ");
@@ -251,16 +258,19 @@ namespace sokoban
 
         private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            if (Console.ForegroundColor == ConsoleColor.Yellow)
+            lock (writelock)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-            }
+                if (Console.ForegroundColor == ConsoleColor.Yellow)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
 
-            printMenuItem(currentCursorPosition);
+                printMenuItem(currentCursorPosition);
+            }
         }
     }
 }
