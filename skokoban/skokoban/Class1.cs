@@ -167,6 +167,139 @@ namespace sokoban
                     @" \/ "
         };
 
+        public static String[] pause = new String[]
+        {
+                    @" _______    ______   __    __   ______   ________ ",
+                    @"|       \  /      \ |  \  |  \ /      \ |        \",
+                    @"| $$$$$$$\|  $$$$$$\| $$  | $$|  $$$$$$\| $$$$$$$$",
+                    @"| $$__/ $$| $$__| $$| $$  | $$| $$___\$$| $$__    ",
+                    @"| $$    $$| $$    $$| $$  | $$ \$$    \ | $$  \   ",
+                    @"| $$$$$$$ | $$$$$$$$| $$  | $$ _\$$$$$$\| $$$$$   ",
+                    @"| $$      | $$  | $$| $$__/ $$|  \__| $$| $$_____ ",
+                    @"| $$      | $$  | $$ \$$    $$ \$$    $$| $$     \",
+                    @" \$$       \$$   \$$  \$$$$$$   \$$$$$$  \$$$$$$$$"
+        };
+
+        public static String[] level = new String[]
+        {
+                    @" _        ______  __      __  ______   _      ",     
+                    @"| |      |  ____| \ \    / / |  ____| | |     ",
+                    @"| |      | |__     \ \  / /  | |__    | |     ",
+                    @"| |      |  __|     \ \/ /   |  __|   | |     ",
+                    @"| |____  | |____     \  /    | |____  | |____ ",
+                    @"|______| |______|     \/     |______| |______|"
+        };
+
+        public static String[] resume = new String[]
+        {
+                    @"  _____    ______    _____   _    _   __  __   ______ ",
+                    @" |  __ \  |  ____|  / ____| | |  | | |  \/  | |  ____|",
+                    @" | |__) | | |__    | (___   | |  | | | \  / | | |__   ",
+                    @" |  _  /  |  __|    \___ \  | |  | | | |\/| | |  __|  ",
+                    @" | | \ \  | |____   ____) | | |__| | | |  | | | |____ ",
+                    @" |_|  \_\ |______| |_____/   \____/  |_|  |_| |______|"
+        };
+
+        public static String[] number0 = new String[]
+        {
+                    @"  ___  ",
+                    @" / _ \ ",
+                    @"| | | |",
+                    @"| | | |",
+                    @"| |_| |",
+                    @" \___/ "
+        };
+
+        public static String[] number1 = new String[]
+        {
+                    @" __ ",
+                    @"/_ |",
+                    @" | |",
+                    @" | |",
+                    @" | |",
+                    @" |_|"   
+        };
+
+        public static String[] number2 = new String[]
+        {
+                    @" ___  ",
+                    @"|__ \ ",
+                    @"   ) |",
+                    @"  / / ",
+                    @" / /_ ",
+                    @"|____|"
+        };
+
+        public static String[] number3 = new String[]
+        {
+                    @" ____  ",
+                    @"|___ \ ",
+                    @"  __) |",
+                    @" |__ < ",
+                    @" ___) |",
+                    @"|____/ "    
+        };
+
+        public static String[] number4 = new String[]
+        {
+                    @" _  _   ",
+                    @"| || |  ",
+                    @"| || |_ ",
+                    @"|__   _|",
+                    @"   | |  ",
+                    @"   |_|  "
+        };
+
+        public static String[] number5 = new String[]
+        {
+                    @" _____ ",
+                    @"| ____|",
+                    @"| |__  ",
+                    @"|___ \ ",
+                    @" ___) |",
+                    @"|____/ "
+        };
+
+        public static String[] number6 = new String[]
+        {
+                    @"   __  ",
+                    @"  / /  ",
+                    @" / /_  ",
+                    @"| '_ \ ",
+                    @"| (_) |",
+                    @" \___/ "
+        };
+
+        public static String[] number7 = new String[]
+        {
+                    @" ______ ",
+                    @"|____  |",
+                    @"    / / ",
+                    @"   / /  ",
+                    @"  / /   ",
+                    @" /_/    "     
+        };
+
+        public static String[] number8 = new String[]
+        {
+                    @"  ___  ",
+                    @" / _ \ ",
+                    @"| (_) |",
+                    @" > _ < ",
+                    @"| (_) |",
+                    @" \___/ "      
+        };
+
+        public static String[] number9 = new String[]
+        {
+                    @"  ___  ",
+                    @" / _ \ ",
+                    @"| (_) |",
+                    @" \__, |",
+                    @"   / / ",
+                    @"  /_/  "       
+        };
+
         public static void printFrame()
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -257,6 +390,47 @@ namespace sokoban
             foreach (string line in arrowDown)
             {
                 Console.CursorLeft = 95;
+                Console.WriteLine(line);
+            }
+        }
+
+        public static void printPauseMenu()
+        {
+            Console.Clear();
+            Console.CursorTop = 0;
+            Console.CursorLeft = 0;
+            printFrame();
+
+            Console.CursorTop = 3;
+
+            foreach(string line in pause)
+            {                            
+                Console.CursorLeft = 55;
+                Console.WriteLine(line);
+            }
+
+            printResumePM();
+            printExitPM();
+        }
+
+        public static void printResumePM()
+        {
+            Console.CursorTop = 15;
+
+            foreach (string line in resume)
+            {
+                Console.CursorLeft = 53;
+                Console.WriteLine(line);
+            }
+        }
+
+        public static void printExitPM()
+        {
+            Console.CursorTop = 24;
+
+            foreach (string line in menuItemExit)
+            {
+                Console.CursorLeft = 68;
                 Console.WriteLine(line);
             }
         }

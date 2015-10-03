@@ -23,11 +23,22 @@ namespace sokoban
         private int NumberMovedBoxes;
         private int previousNumberMovedBoxes;
         private int mapNumber;
-
-        DateTime startTime;
+        private object writelock;
+        private DateTime startTime;
+        private Timer timer;
+        private Timer timerPauseMenu;
+        private bool pauseMenu = false;
+        private int currentPositionInPauseMenu;
 
         public Game(string mapPath)
         {
+            currentPositionInPauseMenu = 0;
+
+            timerPauseMenu = new Timer(500);
+            timerPauseMenu.AutoReset = true;
+            timerPauseMenu.Elapsed += (s, e) => pasueMenuTick(e);
+            timerPauseMenu.Start();
+
             Hero heroObject = new Hero();
             hero = heroObject.graphics;
 
@@ -44,8 +55,8 @@ namespace sokoban
             wall = wallObject.graphics;
 
             mapNumber = 1;
-            initMap(mapPath,true);
-
+            writelock = new object();
+            initMap(mapPath, true);
         }
 
         private List<List<int>> readFile(string path)
@@ -79,53 +90,98 @@ namespace sokoban
         }
 
 
-        private void initMap(string pathFileMap,bool firstStart)
+        private void initMap(string pathFileMap, bool firstStart)
         {
+
             Console.Clear();
             numberSteps = 0;
             PreviousNumberSteps = 0;
             NumberMovedBoxes = 0;
             previousNumberMovedBoxes = 0;
-            Constants.printFrame();
-            Constants.printFrameForCounters();
-            printInformation();
+
+
             List<List<int>> map = new List<List<int>>();
-            List<List<int>> ReadNumbers = readFile(pathFileMap);        
+            List<List<int>> ReadNumbers = readFile(pathFileMap);
             pointsList = new List<PointPosition>();
-            Console.CursorLeft = 57;
-            Console.CursorTop = 7;
-
-            for (int i = 0; i < ReadNumbers.Count(); i++)
+            lock (writelock)
             {
-                List<int> initList = new List<int>();
-                for (int j = 0; j < ReadNumbers[i].Count(); j++)
+                Constants.printFrame();
+                Constants.printFrameForCounters();
+                printInformation();
+                Console.CursorLeft = 57;
+                Console.CursorTop = 7;
+
+                for (int i = 0; i < ReadNumbers.Count(); i++)
                 {
-                    initList.Add(-1);
+                    List<int> initList = new List<int>();
+                    for (int j = 0; j < ReadNumbers[i].Count(); j++)
+                    {
+                        initList.Add(-1);
+                    }
+                    map.Add(initList);
                 }
-                map.Add(initList);
+
+                drawMap(ReadNumbers, map);
+
+                timer = new Timer(100);
+                timer.AutoReset = true;
+                timer.Elapsed += (s, e) => UpdateTime(e);
+                startTime = DateTime.Now;
+                timer.Start();
             }
-
-            drawMap(ReadNumbers, map);
-
-            Timer t = new Timer(5000);
-            t.AutoReset = true;
-            t.Elapsed += (s, e) => UpdateTime(e);
-            startTime = DateTime.Now;
-            t.Start();
-            if(firstStart==true)
+            if (firstStart == true)
                 play(ReadNumbers);
         }
 
         private void UpdateTime(ElapsedEventArgs e)
         {
-            var elapsedTime = (DateTime.Now - startTime).ToString(@"hh\:mm\:ss");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.CursorTop = 8;
-            Console.CursorLeft = 13;
+            lock (writelock)
+            {
+                if(!pauseMenu)
+                {
+                var elapsedTime = (DateTime.Now - startTime).ToString(@"hh\:mm\:ss");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.CursorTop = 8;
+                Console.CursorLeft = 13;
 
-            Console.Write(elapsedTime);
+                Console.Write(elapsedTime);
+                }
+                else
+                {
+                    if (Console.ForegroundColor == ConsoleColor.Yellow)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                    }
+
+                    printMenuItem(currentPositionInPauseMenu);
+                }
+            }
         }
 
+
+        private void pasueMenuTick(ElapsedEventArgs e)
+        {
+            lock (writelock)
+            {
+                if(pauseMenu)
+                {
+                    if (Console.ForegroundColor == ConsoleColor.Yellow)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                    }
+
+                    printMenuItem(currentPositionInPauseMenu);
+                }
+            }
+        }
 
         //POSTAC: 5
         //PUDELKO:6
@@ -133,62 +189,61 @@ namespace sokoban
         //SCIANA:2
         //PUNKT:4
 
-
-
-
         private void drawMap(List<List<int>> CurrentMap, List<List<int>> previousState)
         {
-            bool writed = false;
-            Console.CursorLeft = 57;
-            Console.CursorTop = 7;
-
-            for (int i = 0; i < CurrentMap.Count; i++)
+            lock (writelock)
             {
-                for (int k = 0; k < hero.Count(); k++)
+                bool writed = false;
+                Console.CursorLeft = 57;
+                Console.CursorTop = 7;
+                for (int i = 0; i < CurrentMap.Count; i++)
                 {
-                    for (int j = 0; j < CurrentMap[i].Count; j++)
+                    for (int k = 0; k < hero.Count(); k++)
                     {
-                        if (CurrentMap[i][j] == 5)
+                        for (int j = 0; j < CurrentMap[i].Count; j++)
                         {
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.Write(hero[k]);
-                            writed = true;
-                        }
+                            if (CurrentMap[i][j] == 5)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.Write(hero[k]);
+                                writed = true;
+                            }
 
-                        if (CurrentMap[i][j] == 3 && CurrentMap[i][j] != previousState[i][j])
-                        {
-                            Console.Write(floor[k]);
-                            writed = true;
-                        }
-                        if (CurrentMap[i][j] == 6 && CurrentMap[i][j] != previousState[i][j])
-                        {
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.Write(box[k]);
-                            writed = true;
-                        }
+                            if (CurrentMap[i][j] == 3 && CurrentMap[i][j] != previousState[i][j])
+                            {
+                                Console.Write(floor[k]);
+                                writed = true;
+                            }
+                            if (CurrentMap[i][j] == 6 && CurrentMap[i][j] != previousState[i][j])
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.Write(box[k]);
+                                writed = true;
+                            }
 
-                        if (CurrentMap[i][j] == 4 && CurrentMap[i][j] != previousState[i][j])
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write(point[k]);
-                            writed = true;
-                        }
-                        if (CurrentMap[i][j] == 2 && CurrentMap[i][j] != previousState[i][j])
-                        {
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write(wall[k]);
-                            writed = true;
-                        }
+                            if (CurrentMap[i][j] == 4 && CurrentMap[i][j] != previousState[i][j])
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(point[k]);
+                                writed = true;
+                            }
+                            if (CurrentMap[i][j] == 2 && CurrentMap[i][j] != previousState[i][j])
+                            {
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.Write(wall[k]);
+                                writed = true;
+                            }
 
-                        if (writed == false && Console.CursorLeft <= 57 + (CurrentMap[0].Count() * hero.Count()))
-                            Console.CursorLeft = Console.CursorLeft + hero.Count();
-                        writed = false;
+                            if (writed == false && Console.CursorLeft <= 57 + (CurrentMap[0].Count() * hero.Count()))
+                                Console.CursorLeft = Console.CursorLeft + hero.Count();
+                            writed = false;
 
+                        }
+                        Console.Write(Environment.NewLine);
+                        Console.CursorLeft = 57;
                     }
-                    Console.Write(Environment.NewLine);
-                    Console.CursorLeft = 57;
-                }
 
+                }
             }
         }
 
@@ -480,36 +535,41 @@ namespace sokoban
 
         private void endRound()
         {
+            timer.Stop();
             Console.Clear();
             int number = mapNumber;
             mapNumber++;
-            initMap("sokoban_" + mapNumber + ".txt",false);
+            initMap("sokoban_" + mapNumber + ".txt", false);
         }
 
         private void printNumberSteps(int number, int previousNumber)
         {
-            if (number != previousNumber)
+            lock (writelock)
             {
-                previousNumber = number;
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.CursorTop = 4;
-                Console.CursorLeft = 21;
-                Console.Write(number.ToString());
+                if (number != previousNumber)
+                {
+                    previousNumber = number;
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.CursorTop = 4;
+                    Console.CursorLeft = 21;
+                    Console.Write(number.ToString());
+                }
             }
-
         }
 
         private void printNumberMovedBoxes(int number, int previousNumber)
         {
-            if (number != previousNumber)
+            lock (writelock)
             {
-                previousNumberMovedBoxes = number;
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.CursorTop = 6;
-                Console.CursorLeft = 34;
-                Console.Write(number.ToString());
+                if (number != previousNumber)
+                {
+                    previousNumberMovedBoxes = number;
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.CursorTop = 6;
+                    Console.CursorLeft = 34;
+                    Console.Write(number.ToString());
+                }
             }
-
         }
 
         private void play(List<List<int>> map)
@@ -521,78 +581,155 @@ namespace sokoban
             int[] heroPosition = findHeroPosition(Map);
             List<PointPosition> PointsPositionList = findPositionPoints(Map);
             int SetBoxes = 0;
+
             do
             {
                 checkKey = Console.ReadKey(true);
-                if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
+                if (!pauseMenu)
                 {
-                    helpList = refreshLists(Map, previousStateMap, 1, 0, 0, 0, PointsPositionList);
-                    drawMap(helpList[0], helpList[1]);
-                    printNumberSteps(numberSteps, PreviousNumberSteps);
-                    printNumberMovedBoxes(NumberMovedBoxes, previousNumberMovedBoxes);
-                    SetBoxes = numberSetBoxes(Map, PointsPositionList);
-                    if (CheckEndRound(SetBoxes, PointsPositionList))
+                    if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
                     {
-                        endRound();
-                        Map = readFile("sokoban_" + mapNumber + ".txt");
-                        previousStateMap = copyMap(Map);
-                        heroPosition = findHeroPosition(Map);
-                        PointsPositionList = findPositionPoints(Map);
+                        helpList = refreshLists(Map, previousStateMap, 1, 0, 0, 0, PointsPositionList);
+                        drawMap(helpList[0], helpList[1]);
+                        printNumberSteps(numberSteps, PreviousNumberSteps);
+                        printNumberMovedBoxes(NumberMovedBoxes, previousNumberMovedBoxes);
+                        SetBoxes = numberSetBoxes(Map, PointsPositionList);
+                        if (CheckEndRound(SetBoxes, PointsPositionList))
+                        {
+                            endRound();
+                            Map = readFile("sokoban_" + mapNumber + ".txt");
+                            previousStateMap = copyMap(Map);
+                            heroPosition = findHeroPosition(Map);
+                            PointsPositionList = findPositionPoints(Map);
+                        }
+
+                    }
+                    if (checkKey.Key == ConsoleKey.S || checkKey.Key == ConsoleKey.DownArrow)
+                    {
+                        helpList = refreshLists(Map, previousStateMap, 0, 1, 0, 0, PointsPositionList);
+                        drawMap(helpList[0], helpList[1]);
+                        printNumberSteps(numberSteps, PreviousNumberSteps);
+                        printNumberMovedBoxes(NumberMovedBoxes, previousNumberMovedBoxes);
+                        SetBoxes = numberSetBoxes(Map, PointsPositionList);
+                        if (CheckEndRound(SetBoxes, PointsPositionList))
+                        {
+                            endRound();
+                            Map = readFile("sokoban_" + mapNumber + ".txt");
+                            previousStateMap = copyMap(Map);
+                            heroPosition = findHeroPosition(Map);
+                            PointsPositionList = findPositionPoints(Map);
+                        }
+                    }
+                    if (checkKey.Key == ConsoleKey.A || checkKey.Key == ConsoleKey.LeftArrow)
+                    {
+                        helpList = refreshLists(Map, previousStateMap, 0, 0, 1, 0, PointsPositionList);
+                        drawMap(helpList[0], helpList[1]);
+                        printNumberSteps(numberSteps, PreviousNumberSteps);
+                        printNumberMovedBoxes(NumberMovedBoxes, previousNumberMovedBoxes);
+                        SetBoxes = numberSetBoxes(Map, PointsPositionList);
+                        if (CheckEndRound(SetBoxes, PointsPositionList))
+                        {
+                            endRound();
+                            Map = readFile("sokoban_" + mapNumber + ".txt");
+                            previousStateMap = copyMap(Map);
+                            heroPosition = findHeroPosition(Map);
+                            PointsPositionList = findPositionPoints(Map);
+                        }
+                    }
+                    if (checkKey.Key == ConsoleKey.D || checkKey.Key == ConsoleKey.RightArrow)
+                    {
+                        helpList = refreshLists(Map, previousStateMap, 0, 0, 0, 1, PointsPositionList);
+                        drawMap(helpList[0], helpList[1]);
+                        printNumberSteps(numberSteps, PreviousNumberSteps);
+                        printNumberMovedBoxes(NumberMovedBoxes, previousNumberMovedBoxes);
+                        SetBoxes = numberSetBoxes(Map, PointsPositionList);
+                        if (CheckEndRound(SetBoxes, PointsPositionList))
+                        {
+                            endRound();
+                            Map = readFile("sokoban_" + mapNumber + ".txt");
+                            previousStateMap = copyMap(Map);
+                            heroPosition = findHeroPosition(Map);
+                            PointsPositionList = findPositionPoints(Map);
+                        }
                     }
 
-                }
-                if (checkKey.Key == ConsoleKey.S || checkKey.Key == ConsoleKey.DownArrow)
-                {
-                    helpList = refreshLists(Map, previousStateMap, 0, 1, 0, 0, PointsPositionList);
-                    drawMap(helpList[0], helpList[1]);
-                    printNumberSteps(numberSteps, PreviousNumberSteps);
-                    printNumberMovedBoxes(NumberMovedBoxes, previousNumberMovedBoxes);
-                    SetBoxes = numberSetBoxes(Map, PointsPositionList);
-                    if (CheckEndRound(SetBoxes, PointsPositionList))
+                    if (checkKey.Key == ConsoleKey.Escape)
                     {
-                        endRound();
-                        Map = readFile("sokoban_" + mapNumber + ".txt");
-                        previousStateMap = copyMap(Map);
-                        heroPosition = findHeroPosition(Map);
-                        PointsPositionList = findPositionPoints(Map);
+                        timer.Stop();
+                        pauseMenu = true;
+                        Constants.printPauseMenu();
                     }
                 }
-                if (checkKey.Key == ConsoleKey.A || checkKey.Key == ConsoleKey.LeftArrow)
+                else
                 {
-                    helpList = refreshLists(Map, previousStateMap, 0, 0, 1, 0, PointsPositionList);
-                    drawMap(helpList[0], helpList[1]);
-                    printNumberSteps(numberSteps, PreviousNumberSteps);
-                    printNumberMovedBoxes(NumberMovedBoxes, previousNumberMovedBoxes);
-                    SetBoxes = numberSetBoxes(Map, PointsPositionList);
-                    if (CheckEndRound(SetBoxes, PointsPositionList))
+                    if(checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
                     {
-                        endRound();
-                        Map = readFile("sokoban_" + mapNumber + ".txt");
-                        previousStateMap = copyMap(Map);
-                        heroPosition = findHeroPosition(Map);
-                        PointsPositionList = findPositionPoints(Map);
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        printMenuItem(currentPositionInPauseMenu);
+
+                        if (currentPositionInPauseMenu == 0)
+                        {
+                            currentPositionInPauseMenu = 1;
+                        }
+                        else
+                        {
+                            currentPositionInPauseMenu--;
+                        }
                     }
-                }
-                if (checkKey.Key == ConsoleKey.D || checkKey.Key == ConsoleKey.RightArrow)
-                {
-                    helpList = refreshLists(Map, previousStateMap, 0, 0, 0, 1, PointsPositionList);
-                    drawMap(helpList[0], helpList[1]);
-                    printNumberSteps(numberSteps, PreviousNumberSteps);
-                    printNumberMovedBoxes(NumberMovedBoxes, previousNumberMovedBoxes);
-                    SetBoxes = numberSetBoxes(Map, PointsPositionList);
-                    if (CheckEndRound(SetBoxes, PointsPositionList))
+
+                    if (checkKey.Key == ConsoleKey.S || checkKey.Key == ConsoleKey.DownArrow)
                     {
-                        endRound();
-                        Map = readFile("sokoban_" + mapNumber + ".txt");
-                        previousStateMap = copyMap(Map);
-                        heroPosition = findHeroPosition(Map);
-                        PointsPositionList = findPositionPoints(Map);
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        printMenuItem(currentPositionInPauseMenu);
+
+                        if (currentPositionInPauseMenu == 1)
+                        {
+                            currentPositionInPauseMenu = 0;
+                        }
+                        else
+                        {
+                            currentPositionInPauseMenu++;
+                        }
+                    }
+
+                    if (checkKey.Key == ConsoleKey.Enter)
+                    {
+                        selectedAction(currentPositionInPauseMenu);
+                        break;
                     }
                 }
             } while (true);
-        
-        
         }
 
+
+        private void printMenuItem(int select)
+        {
+            switch (select)
+            {
+                case 0:
+                    Constants.printResumePM();
+                    break;
+                case 1:
+                    Constants.printExitPM();
+                    break;
+            }
+        }
+
+        private void selectedAction(int select)
+        {
+            switch (select)
+            {
+                case 0:
+                    pauseMenu = false;
+                    Console.Clear();
+                    //timer.Start();
+                    break;
+                case 1:
+                    timerPauseMenu.Stop();
+                    Menu menu = new Menu();
+                    menu.run();
+                    break;
+            }
+        }
     }
 }
