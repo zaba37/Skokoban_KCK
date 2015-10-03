@@ -48,13 +48,13 @@ namespace sokoban
             timerPauseMenu.AutoReset = true;
             timerPauseMenu.Elapsed += (s, e) => pasueMenuTick(e);
             timerPauseMenu.Start();
-            
+
             heroObject = new Hero();
             boxObject = new Box();
             pointObject = new Point();
             floorObject = new Floor();
             wallObject = new Wall();
- 
+
             mapNumber = 1;
             writelock = new object();
             initMap(mapPath, true);
@@ -93,6 +93,11 @@ namespace sokoban
 
         private void initMap(string pathFileMap, bool firstStart)
         {
+            if (mapNumber == 1)
+            {
+                Constants.printLevel(mapNumber);
+                Console.ReadKey();
+            }
 
             Console.Clear();
             numberSteps = 0;
@@ -133,6 +138,7 @@ namespace sokoban
             }
             if (firstStart == true)
                 play(ReadNumbers);
+
         }
 
         private void UpdateTime(ElapsedEventArgs e)
@@ -587,8 +593,10 @@ namespace sokoban
 
             do
             {
-                if(isNewLevel){
+                if (isNewLevel && mapNumber != 1)
+                {
                     timer.Stop();
+                    pauseTime = DateTime.Now;
                     Console.Clear();
                     Constants.printLevel(mapNumber);
                 }
@@ -597,14 +605,14 @@ namespace sokoban
 
                 if (!pauseMenu)
                 {
-                    if (isNewLevel)
+                    if (isNewLevel && mapNumber != 1)
                     {
                         Console.Clear();
                         isNewLevel = false;
                         resumeGame(Map);
-                        timer.Start();
+
                     }
-                    
+
                     if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
                     {
                         helpList = refreshLists(Map, previousStateMap, 1, 0, 0, 0, PointsPositionList);
