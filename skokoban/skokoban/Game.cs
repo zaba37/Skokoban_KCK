@@ -40,7 +40,8 @@ namespace sokoban
         {
             totalPoints = 0;
 
-            totalRounds = 8; //TU ILE MAP MA GRA TRZEBA WPISAC
+            totalRounds = 2; //TU ILE MAP MA GRA TRZEBA WPISAC
+
             typewriter = Constants.getSoundPlayerInstance();
             typewriter.Stop();
             typewriter.SoundLocation = "step.wav";
@@ -784,6 +785,18 @@ namespace sokoban
             } while (true);
 
             timer.Stop();
+
+            DateTime ElapsedTime = DateTime.Parse(elapsedTime);
+            int totalSeconds = (ElapsedTime.Hour * 360) + (ElapsedTime.Minute * 60) + ElapsedTime.Second;
+            if (totalSeconds < 20)
+                totalPoints = totalPoints + 100;
+            if (totalSeconds >= 20 && totalSeconds <= 40)
+                totalPoints = totalPoints + 50;
+            if (totalSeconds > 40)
+                totalPoints = totalPoints + 20;
+            double pointsForSteps = ((double)numberSteps) * 0.1;
+
+            totalPoints = totalPoints - (int)pointsForSteps;
 
             EndGame endgame = new EndGame(totalPoints);
 
