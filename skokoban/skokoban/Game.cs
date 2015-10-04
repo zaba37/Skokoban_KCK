@@ -39,7 +39,7 @@ namespace sokoban
         public Game(string mapPath)
         {
             totalPoints = 0;
-            totalRounds = 2; //TU ILE MAP MA GRA TRZEBA WPISAC
+            totalRounds = 1; //TU ILE MAP MA GRA TRZEBA WPISAC
             typewriter = Constants.getSoundPlayerInstance();
             typewriter.Stop();
             typewriter.SoundLocation = "step.wav";
