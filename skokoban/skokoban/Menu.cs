@@ -14,6 +14,7 @@ namespace sokoban
         private int currentCursorPosition;
         private List<String[]> titleList;
         private int titleCounter;
+        private object lockwrite;
         private int redrawTitleCounter;
         private System.Timers.Timer timer;
         private ConsoleKeyInfo checkKey;
@@ -24,6 +25,8 @@ namespace sokoban
         public Menu()
         {
             typewriter = Constants.getSoundPlayerInstance();
+
+            lockwrite = new Object();
 
             String sss = typewriter.SoundLocation;
 
@@ -91,7 +94,10 @@ namespace sokoban
                 if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    printMenuItem(currentCursorPosition);
+                    lock (lockwrite)
+                    {
+                        printMenuItem(currentCursorPosition);
+                    }
 
                     if (currentCursorPosition == 0)
                     {
@@ -105,7 +111,11 @@ namespace sokoban
                 else if (checkKey.Key == ConsoleKey.S || checkKey.Key == ConsoleKey.DownArrow)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    printMenuItem(currentCursorPosition);
+                        
+                    lock (lockwrite)
+                    {
+                        printMenuItem(currentCursorPosition);
+                    }
 
                     if (currentCursorPosition == 2)
                     {
@@ -157,36 +167,39 @@ namespace sokoban
 
         private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            int cursorTopPosition = 2;
-            ConsoleColor consoleColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-
-            if (redrawTitleCounter % 2 == 0)
+            lock (lockwrite)
             {
-                foreach (string line in titleList.ElementAt(titleCounter % 8))
+                int cursorTopPosition = 2;
+                ConsoleColor consoleColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+
+                if (redrawTitleCounter % 2 == 0)
                 {
-                    Console.CursorTop = cursorTopPosition;
-                    Console.CursorLeft = Console.WindowWidth / 4;
-                    Console.WriteLine(line);
-                    cursorTopPosition++;
+                    foreach (string line in titleList.ElementAt(titleCounter % 8))
+                    {
+                        Console.CursorTop = cursorTopPosition;
+                        Console.CursorLeft = Console.WindowWidth / 4;
+                        Console.WriteLine(line);
+                        cursorTopPosition++;
+                    }
+
+                    titleCounter++;
                 }
 
-                titleCounter++;
-            }
+                redrawTitleCounter++;
+                Console.ForegroundColor = consoleColor;
 
-            redrawTitleCounter++;
-            Console.ForegroundColor = consoleColor;
+                if (Console.ForegroundColor == ConsoleColor.Yellow)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
 
-            if (Console.ForegroundColor == ConsoleColor.Yellow)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
+                printMenuItem(currentCursorPosition);
             }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-            }
-
-            printMenuItem(currentCursorPosition);
         }
 
         private void selectedAction(int select)

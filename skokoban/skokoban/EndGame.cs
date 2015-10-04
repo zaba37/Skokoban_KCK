@@ -16,6 +16,7 @@ namespace sokoban
         private ConsoleKeyInfo checkKey;
         private String name;
         private Menu menu;
+
         public EndGame(int points)
         {
             this.points = points;
@@ -83,7 +84,7 @@ namespace sokoban
                         }
                     }
                 }
-                else
+                else if (char.IsLetter(checkKey.KeyChar))
                 {
                     lock (writelock)
                     {

@@ -39,7 +39,7 @@ namespace sokoban
         public Game(string mapPath)
         {
             totalPoints = 0;
-            totalRounds = 1; //TU ILE MAP MA GRA TRZEBA WPISAC
+            totalRounds = 5; //TU ILE MAP MA GRA TRZEBA WPISAC
             typewriter = Constants.getSoundPlayerInstance();
             typewriter.Stop();
             typewriter.SoundLocation = "step.wav";
@@ -78,6 +78,7 @@ namespace sokoban
             {
                 Environment.Exit(0);
             }
+
             return intMap;
         }
 
@@ -366,9 +367,6 @@ namespace sokoban
                     numberSteps++;
                 }
             }
-
-
-
 
             if (down != 0)
             {
@@ -719,7 +717,10 @@ namespace sokoban
                         typewriter.SoundLocation = "pauseMusic.wav";
                         typewriter.PlayLooping();
                         pauseMenu = true;
-                        Constants.printPauseMenu();
+                        lock (writelock)
+                        {
+                            Constants.printPauseMenu();
+                        }
                     }
                 }
                 else
@@ -727,7 +728,11 @@ namespace sokoban
                     if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        printMenuItem(currentPositionInPauseMenu);
+
+                        lock (writelock)
+                        {
+                            printMenuItem(currentPositionInPauseMenu);
+                        }
 
                         if (currentPositionInPauseMenu == 0)
                         {
@@ -742,7 +747,11 @@ namespace sokoban
                     if (checkKey.Key == ConsoleKey.S || checkKey.Key == ConsoleKey.DownArrow)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        printMenuItem(currentPositionInPauseMenu);
+
+                        lock (writelock)
+                        {
+                            printMenuItem(currentPositionInPauseMenu);
+                        }
 
                         if (currentPositionInPauseMenu == 2)
                         {
@@ -761,10 +770,17 @@ namespace sokoban
                     }
                 }
             } while (true);
-            timer.Stop();
-            EndGame endgame = new EndGame(totalPoints);
-            endgame.run();
 
+            timer.Stop();
+
+            EndGame endgame = new EndGame(totalPoints);
+
+            lock (writelock)
+            {
+                typewriter.SoundLocation = "mainMusic.wav";
+                typewriter.PlayLooping();
+                endgame.run();
+            }
         }
 
 
@@ -787,6 +803,7 @@ namespace sokoban
                 }
                 initMap.Add(initList);
             }
+
             lock (writelock)
             {
                 Constants.printFrame();
@@ -795,6 +812,7 @@ namespace sokoban
                 printNumberSteps(numberSteps, PreviousNumberSteps);
                 printNumberMovedBoxes(NumberMovedBoxes, previousNumberMovedBoxes);
             }
+
             drawMap(Map, initMap);
             var difference = DateTime.Now - pauseTime;
             startTime = startTime.Add(difference);
@@ -806,13 +824,22 @@ namespace sokoban
             switch (select)
             {
                 case 0:
-                    Constants.printResumePM();
+                    lock (writelock)
+                    {
+                        Constants.printResumePM();
+                    }
                     break;
                 case 1:
-                    Constants.printRestratPM();
+                    lock (writelock)
+                    {
+                        Constants.printRestratPM();
+                    }
                     break;
                 case 2:
-                    Constants.printExitPM();
+                    lock (writelock)
+                    {
+                        Constants.printExitPM();
+                    }
                     break;
             }
         }
