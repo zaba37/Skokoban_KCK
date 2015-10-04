@@ -15,13 +15,13 @@ namespace sokoban
             Console.SetWindowSize(160, 50);
             SoundPlayer typewriter = Constants.getSoundPlayerInstance();
             typewriter.SoundLocation = "mainMusic.wav";
-            typewriter.PlayLooping();
+            //typewriter.PlayLooping();
 
             EndGame end = new EndGame(10);
             end.run();
-            Console.ReadKey();
-           // Menu menu = new Menu();
-           // menu.run();
+          //  Console.ReadKey();
+         //  Menu menu = new Menu();
+          //1 menu.run();
         }
 
     }

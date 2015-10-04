@@ -14,6 +14,7 @@ namespace sokoban
         private Object writelock;
         private int currentOptionPosition;
         private ConsoleKeyInfo checkKey;
+        private String name;
 
         public EndGame(int points)
         {
@@ -31,11 +32,11 @@ namespace sokoban
             Constants.printGameOverScreen();
             timerPauseMenu.Start();
 
-            while(true)
+            while (true)
             {
                 checkKey = Console.ReadKey(true);
 
-                if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
+                if (checkKey.Key == ConsoleKey.UpArrow)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     printMenuItem(currentOptionPosition);
@@ -49,8 +50,7 @@ namespace sokoban
                         currentOptionPosition--;
                     }
                 }
-
-                if (checkKey.Key == ConsoleKey.S || checkKey.Key == ConsoleKey.DownArrow)
+                else if (checkKey.Key == ConsoleKey.DownArrow)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     printMenuItem(currentOptionPosition);
@@ -64,10 +64,34 @@ namespace sokoban
                         currentOptionPosition++;
                     }
                 }
-
-                if (checkKey.Key == ConsoleKey.Enter)
+                else if (checkKey.Key == ConsoleKey.Enter)
                 {
                     selectedAction(currentOptionPosition);
+                }
+                else if(checkKey.Key == ConsoleKey.Backspace)
+                {
+                    lock (writelock)
+                    {
+                        if (name.Length != 0)
+                        {
+                            name = name.Remove(name.Length - 1);
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.CursorLeft = 63;
+                            Console.CursorTop = 26;
+                            Console.Write(name + " ");
+                        }
+                    }
+                }
+                else
+                {
+                    lock (writelock)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.CursorLeft = 63;
+                        Console.CursorTop = 26;
+                        name += checkKey.Key;
+                        Console.Write(name);
+                    }
                 }
             }
         }
@@ -76,17 +100,17 @@ namespace sokoban
         {
             lock (writelock)
             {
-             
-                    if (Console.ForegroundColor == ConsoleColor.Yellow)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                    }
 
-                    printMenuItem(currentOptionPosition);
+                if (Console.ForegroundColor == ConsoleColor.Yellow)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+
+                printMenuItem(currentOptionPosition);
             }
         }
 
