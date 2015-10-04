@@ -39,7 +39,11 @@ namespace sokoban
         public Game(string mapPath)
         {
             totalPoints = 0;
+
+
             totalRounds = 9; //TU ILE MAP MA GRA TRZEBA WPISAC
+
+
             typewriter = Constants.getSoundPlayerInstance();
             typewriter.Stop();
             typewriter.SoundLocation = "step.wav";
@@ -78,6 +82,7 @@ namespace sokoban
             {
                 Environment.Exit(0);
             }
+
             return intMap;
         }
 
@@ -85,13 +90,13 @@ namespace sokoban
         {
             Console.CursorTop = 4;
             Console.CursorLeft = 7;
-            Console.Write("Ilosc krokow: " + numberSteps.ToString());
+            Console.Write("Number of steps: " + numberSteps.ToString());
             Console.CursorTop = 6;
             Console.CursorLeft = 7;
-            Console.Write("Ilosc przesuniec skrzynek: " + NumberMovedBoxes.ToString());
+            Console.Write("Number of shifts boxes: " + NumberMovedBoxes.ToString());
             Console.CursorTop = 8;
             Console.CursorLeft = 7;
-            Console.Write("Czas: " + (DateTime.Now - startTime).ToString(@"hh\:mm\:ss"));
+            Console.Write("Time: " + (DateTime.Now - startTime).ToString(@"hh\:mm\:ss"));
         }
 
 
@@ -367,9 +372,6 @@ namespace sokoban
                 }
             }
 
-
-
-
             if (down != 0)
             {
                 int[] heroPosition = findHeroPosition(map);
@@ -571,6 +573,8 @@ namespace sokoban
             double pointsForSteps = ((double)numberSteps) * 0.1;
 
             totalPoints = totalPoints - (int)pointsForSteps;
+            if (totalPoints < 0)
+                totalPoints = 0;
 
             int number = mapNumber;
             mapNumber++;
@@ -587,7 +591,7 @@ namespace sokoban
                     previousNumber = number;
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.CursorTop = 4;
-                    Console.CursorLeft = 21;
+                    Console.CursorLeft = 24;
                     Console.Write(number.ToString());
                 }
             }
@@ -602,7 +606,7 @@ namespace sokoban
                     previousNumberMovedBoxes = number;
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.CursorTop = 6;
-                    Console.CursorLeft = 34;
+                    Console.CursorLeft = 31;
                     Console.Write(number.ToString());
                 }
             }
@@ -730,7 +734,10 @@ namespace sokoban
                         typewriter.SoundLocation = "pauseMusic.wav";
                         typewriter.PlayLooping();
                         pauseMenu = true;
-                        Constants.printPauseMenu();
+                        lock (writelock)
+                        {
+                            Constants.printPauseMenu();
+                        }
                     }
                 }
                 else
@@ -738,7 +745,11 @@ namespace sokoban
                     if (checkKey.Key == ConsoleKey.W || checkKey.Key == ConsoleKey.UpArrow)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        printMenuItem(currentPositionInPauseMenu);
+
+                        lock (writelock)
+                        {
+                            printMenuItem(currentPositionInPauseMenu);
+                        }
 
                         if (currentPositionInPauseMenu == 0)
                         {
@@ -753,7 +764,11 @@ namespace sokoban
                     if (checkKey.Key == ConsoleKey.S || checkKey.Key == ConsoleKey.DownArrow)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        printMenuItem(currentPositionInPauseMenu);
+
+                        lock (writelock)
+                        {
+                            printMenuItem(currentPositionInPauseMenu);
+                        }
 
                         if (currentPositionInPauseMenu == 2)
                         {
@@ -772,7 +787,9 @@ namespace sokoban
                     }
                 }
             } while (true);
+
             timer.Stop();
+
             DateTime ElapsedTime = DateTime.Parse(elapsedTime);
             int totalSeconds = (ElapsedTime.Hour * 360) + (ElapsedTime.Minute * 60) + ElapsedTime.Second;
             if (totalSeconds < 20)
@@ -782,11 +799,18 @@ namespace sokoban
             if (totalSeconds > 40)
                 totalPoints = totalPoints + 20;
             double pointsForSteps = ((double)numberSteps) * 0.1;
-
             totalPoints = totalPoints - (int)pointsForSteps;
-            EndGame endgame = new EndGame(totalPoints);
-            endgame.run();
+            if (totalPoints < 0)
+                totalPoints = 0;
 
+            EndGame endgame = new EndGame(totalPoints);
+
+            lock (writelock)
+            {
+                typewriter.SoundLocation = "mainMusic.wav";
+                typewriter.PlayLooping();
+                endgame.run();
+            }
         }
 
 
@@ -809,6 +833,7 @@ namespace sokoban
                 }
                 initMap.Add(initList);
             }
+
             lock (writelock)
             {
                 Constants.printFrame();
@@ -817,6 +842,7 @@ namespace sokoban
                 printNumberSteps(numberSteps, PreviousNumberSteps);
                 printNumberMovedBoxes(NumberMovedBoxes, previousNumberMovedBoxes);
             }
+
             drawMap(Map, initMap);
             var difference = DateTime.Now - pauseTime;
             startTime = startTime.Add(difference);
@@ -828,13 +854,22 @@ namespace sokoban
             switch (select)
             {
                 case 0:
-                    Constants.printResumePM();
+                    lock (writelock)
+                    {
+                        Constants.printResumePM();
+                    }
                     break;
                 case 1:
-                    Constants.printRestratPM();
+                    lock (writelock)
+                    {
+                        Constants.printRestratPM();
+                    }
                     break;
                 case 2:
-                    Constants.printExitPM();
+                    lock (writelock)
+                    {
+                        Constants.printExitPM();
+                    }
                     break;
             }
         }
