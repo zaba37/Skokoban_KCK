@@ -34,9 +34,12 @@ namespace sokoban
         private String elapsedTime;
         private DateTime pauseTime;
         private bool isNewLevel;
-
+        private int totalPoints;
+        private int totalRounds;
         public Game(string mapPath)
         {
+            totalPoints = 0;
+            totalRounds = 1; //TU ILE MAP MA GRA TRZEBA WPISAC
             typewriter = Constants.getSoundPlayerInstance();
             typewriter.Stop();
             typewriter.SoundLocation = "step.wav";
@@ -594,6 +597,15 @@ namespace sokoban
             }
         }
 
+        private bool checkEndGame(int number)
+        {
+            int mapnumber = mapNumber + 1;
+            if (mapnumber > number)
+                return true;
+            else
+                return false;
+        }
+
         private void play(List<List<int>> map)
         {
             checkKey = new ConsoleKeyInfo();
@@ -635,6 +647,8 @@ namespace sokoban
                         SetBoxes = numberSetBoxes(Map, PointsPositionList);
                         if (CheckEndRound(SetBoxes, PointsPositionList))
                         {
+                            if (checkEndGame(totalRounds))
+                                break;
                             endRound();
                             Map = readFile("sokoban_" + mapNumber + ".txt");
                             previousStateMap = copyMap(Map);
@@ -652,6 +666,8 @@ namespace sokoban
                         SetBoxes = numberSetBoxes(Map, PointsPositionList);
                         if (CheckEndRound(SetBoxes, PointsPositionList))
                         {
+                            if (checkEndGame(totalRounds))
+                                break;
                             endRound();
                             Map = readFile("sokoban_" + mapNumber + ".txt");
                             previousStateMap = copyMap(Map);
@@ -668,6 +684,8 @@ namespace sokoban
                         SetBoxes = numberSetBoxes(Map, PointsPositionList);
                         if (CheckEndRound(SetBoxes, PointsPositionList))
                         {
+                            if (checkEndGame(totalRounds))
+                                break;
                             endRound();
                             Map = readFile("sokoban_" + mapNumber + ".txt");
                             previousStateMap = copyMap(Map);
@@ -684,6 +702,8 @@ namespace sokoban
                         SetBoxes = numberSetBoxes(Map, PointsPositionList);
                         if (CheckEndRound(SetBoxes, PointsPositionList))
                         {
+                            if (checkEndGame(totalRounds))
+                                break;
                             endRound();
                             Map = readFile("sokoban_" + mapNumber + ".txt");
                             previousStateMap = copyMap(Map);
@@ -741,6 +761,10 @@ namespace sokoban
                     }
                 }
             } while (true);
+            timer.Stop();
+            EndGame endgame = new EndGame(totalPoints);
+            endgame.run();
+
         }
 
 

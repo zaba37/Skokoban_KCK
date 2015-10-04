@@ -9,7 +9,7 @@ using System.IO;
 
 namespace sokoban
 {
-    class RankingItem 
+   public class RankingItem 
     {
         public int score { get; set; }
         public string name { get; set; }
@@ -189,6 +189,7 @@ namespace sokoban
             RankingItemList.Add(new RankingItem(name, score));
         }
 
+        /*
         private void saveRanking()
         {
             String fileName = @"ranking.txt";
@@ -210,7 +211,7 @@ namespace sokoban
             
             
         }
-
+        */
         private void printMenuItem(int select)
         {
             switch (select)
@@ -248,7 +249,7 @@ namespace sokoban
                     }
                     break;
                 case 2: //back button
-                    saveRanking();
+                  //  saveRanking();
                     Menu menu = new Menu();
                     timer.Close();
                     menu.run();
