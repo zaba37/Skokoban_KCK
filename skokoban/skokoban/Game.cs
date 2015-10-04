@@ -847,6 +847,8 @@ namespace sokoban
 
                     pauseMenu = false;
                     Console.Clear();
+                    double pointsForSteps = ((double)numberSteps) * 0.1;
+                    totalPoints = totalPoints - (int)pointsForSteps;
                     initMap("sokoban_" + mapNumber + ".txt", true);
                     break;
                 case 2:
