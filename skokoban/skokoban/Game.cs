@@ -39,7 +39,8 @@ namespace sokoban
         public Game(string mapPath)
         {
             totalPoints = 0;
-            totalRounds = 5; //TU ILE MAP MA GRA TRZEBA WPISAC
+
+            totalRounds = 8; //TU ILE MAP MA GRA TRZEBA WPISAC
             typewriter = Constants.getSoundPlayerInstance();
             typewriter.Stop();
             typewriter.SoundLocation = "step.wav";
@@ -86,13 +87,13 @@ namespace sokoban
         {
             Console.CursorTop = 4;
             Console.CursorLeft = 7;
-            Console.Write("Ilosc krokow: " + numberSteps.ToString());
+            Console.Write("Number of steps: " + numberSteps.ToString());
             Console.CursorTop = 6;
             Console.CursorLeft = 7;
-            Console.Write("Ilosc przesuniec skrzynek: " + NumberMovedBoxes.ToString());
+            Console.Write("Number of shifts boxes: " + NumberMovedBoxes.ToString());
             Console.CursorTop = 8;
             Console.CursorLeft = 7;
-            Console.Write("Czas: " + (DateTime.Now - startTime).ToString(@"hh\:mm\:ss"));
+            Console.Write("Time: " + (DateTime.Now - startTime).ToString(@"hh\:mm\:ss"));
         }
 
 
@@ -558,7 +559,18 @@ namespace sokoban
         private void endRound()
         {
             timer.Stop();
-            Console.Clear();
+            DateTime ElapsedTime = DateTime.Parse(elapsedTime);
+            int totalSeconds = (ElapsedTime.Hour * 360) + (ElapsedTime.Minute * 60) + ElapsedTime.Second;
+            if (totalSeconds < 20)
+                totalPoints = totalPoints + 100;
+            if (totalSeconds >= 20 && totalSeconds <= 40)
+                totalPoints = totalPoints + 50;
+            if (totalSeconds > 40)
+                totalPoints = totalPoints + 20;
+            double pointsForSteps = ((double)numberSteps) * 0.1;
+
+            totalPoints = totalPoints - (int)pointsForSteps;
+
             int number = mapNumber;
             mapNumber++;
             isNewLevel = true;
@@ -574,7 +586,7 @@ namespace sokoban
                     previousNumber = number;
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.CursorTop = 4;
-                    Console.CursorLeft = 21;
+                    Console.CursorLeft = 24;
                     Console.Write(number.ToString());
                 }
             }
@@ -589,7 +601,7 @@ namespace sokoban
                     previousNumberMovedBoxes = number;
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.CursorTop = 6;
-                    Console.CursorLeft = 34;
+                    Console.CursorLeft = 31;
                     Console.Write(number.ToString());
                 }
             }
@@ -863,6 +875,8 @@ namespace sokoban
 
                     pauseMenu = false;
                     Console.Clear();
+                    double pointsForSteps = ((double)numberSteps) * 0.1;
+                    totalPoints = totalPoints - (int)pointsForSteps;
                     initMap("sokoban_" + mapNumber + ".txt", true);
                     break;
                 case 2:
