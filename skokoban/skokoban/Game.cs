@@ -39,7 +39,7 @@ namespace sokoban
         public Game(string mapPath)
         {
             totalPoints = 0;
-            totalRounds = 1; //TU ILE MAP MA GRA TRZEBA WPISAC
+            totalRounds = 2; //TU ILE MAP MA GRA TRZEBA WPISAC
             typewriter = Constants.getSoundPlayerInstance();
             typewriter.Stop();
             typewriter.SoundLocation = "step.wav";
@@ -560,7 +560,18 @@ namespace sokoban
         private void endRound()
         {
             timer.Stop();
-            Console.Clear();
+            DateTime ElapsedTime = DateTime.Parse(elapsedTime);
+            int totalSeconds = (ElapsedTime.Hour * 360) + (ElapsedTime.Minute * 60) + ElapsedTime.Second;
+            if (totalSeconds < 20)
+                totalPoints = totalPoints + 100;
+            if (totalSeconds >= 20 && totalSeconds <= 40)
+                totalPoints = totalPoints + 50;
+            if (totalSeconds > 40)
+                totalPoints = totalPoints + 20;
+            double pointsForSteps = ((double)numberSteps) * 0.1;
+
+            totalPoints = totalPoints - (int)pointsForSteps;
+
             int number = mapNumber;
             mapNumber++;
             isNewLevel = true;
